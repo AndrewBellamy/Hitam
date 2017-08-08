@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "754586682256",
+    "firebase_url": "https://hitam-5f357.firebaseio.com",
+    "project_id": "hitam-5f357",
+    "storage_bucket": "hitam-5f357.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754586682256:android:7c66f4feddc8e308",
+        "android_client_info": {
+          "package_name": "com.example.thean.hitam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "754586682256-nicto515dhmmovh3aredqoh41h55srm8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.thean.hitam",
+            "certificate_hash": "8622a2de6ceab8ec0449442e4a7480666d3b35fb"
+          }
+        },
+        {
+          "client_id": "754586682256-80n5pa5b3qkmd22d3fter8i6v1785854.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtEEx6Ki1_KSysXBIb1fWnkOG_Z2HE9-k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "754586682256-80n5pa5b3qkmd22d3fter8i6v1785854.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
