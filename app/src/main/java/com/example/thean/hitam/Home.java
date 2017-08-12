@@ -1,8 +1,13 @@
 package com.example.thean.hitam;
 
 import android.accounts.AccountManager;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class Home extends AppCompatActivity {
 
@@ -16,6 +21,8 @@ public class Home extends AppCompatActivity {
     private static final int SUB_DIALOG = 5;
 
     DBControl local_db;
+    Button add_button, sub_button, income_button, commit_button;
+    TextView float_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,5 +31,19 @@ public class Home extends AppCompatActivity {
 
         //Initialise DB
         local_db = new DBControl(this);
+
+        commit_button = (Button) findViewById(R.id.commitButton);
+
+        float_text = (TextView) findViewById(R.id.floatOutput);
+        float_text.setText((CharSequence) "no data");
+}
+
+    /**
+     * Navigates to the commitment listView activity
+     * @param view
+     */
+    public void navigateToCommitments(View view) {
+        Intent intentCommit = new Intent(this, Section.class);
+        startActivity(intentCommit);
     }
 }
