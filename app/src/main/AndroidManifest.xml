@@ -21,7 +21,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".Home" />
-        <activity android:name=".Section" />
+        <activity
+            android:name=".Section"
+            android:parentActivityName=".Home">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Home" />
+        </activity>
     </application>
 
 </manifest>

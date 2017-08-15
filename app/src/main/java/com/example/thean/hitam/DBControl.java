@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -65,6 +66,12 @@ public class DBControl extends SQLiteOpenHelper {
                 "CREATE TABLE "+ITEM_TABLE+" (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "+ITEM_NAME+" TEXT, "+ITEM_AMOUNT+" FLOAT, "+ITEM_FREQ+" INTEGER," +
                         " "+ITEM_PRIORITY+" INTEGER,  "+ITEM_SECTION+" TEXT)"
         );
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SECTION_NAME, "Unsorted");
+        contentValues.put(SECTION_PRIORITY, 1);
+        contentValues.put(SECTION_TOTAL, 0.00F);
+        db.insert(SECTION_TABLE, null, contentValues);
     }
 
     @Override
@@ -100,10 +107,23 @@ public class DBControl extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete("notes", "id = ? ", new String[] {Integer.toString(id)});
     }
-
+    */
     //Predicate methods
 
+    public ArrayList<String> getSectionData() {
+        ArrayList<String> array_sections = new ArrayList<String> ();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor response = db.rawQuery("SELECT * FROM "+SECTION_TABLE+"", null);
+        response.moveToFirst();
 
+        while(response.isAfterLast() == false) {
+            array_sections.add(response.getString(response.getColumnIndex(SECTION_NAME)));
+            Log.i("section name: ", String.valueOf(response.getColumnIndex(SECTION_NAME)));
+            response.moveToNext();
+        }
+        return array_sections;
+    }
+    /*
     public Cursor getData(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor response = db.rawQuery("SELECT * FROM notes WHERE id="+id+"", null);
