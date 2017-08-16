@@ -8,4 +8,22 @@
     <string name="button_home_section">Commitments</string>
     <string name="button_home_income">Income</string>
     <string name="no_data_result">No Data</string>
+    <string name="label_income_amount">Amount</string>
+    <string name="label_income_tax">Tax</string>
+    <string name="label_income_deductions">Deductions</string>
+    <string name="label_income_freq">Frequency</string>
+    <string name="label_income_date">Start Date</string>
+    <string-array name="frequency_array">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Fortnightly</item>
+        <item>Monthly</item>
+        <item>Quarterly</item>
+        <item>Yearly</item>
+    </string-array>
+    <string-array name="priority_array">
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
+    </string-array>
 </resources>

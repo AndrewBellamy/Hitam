@@ -21,7 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Home" />
+        <activity
+            android:name=".Home"/>
         <activity
             android:name=".Section"
             android:label="@string/activity_section_title"
@@ -38,7 +39,14 @@
                 android:name=".android.support.PARENT_ACTIVITY"
                 android:value=".Section" />
         </activity>
-        <activity android:name=".Income"></activity>
+        <activity
+            android:name=".Income"
+            android:label="@string/activity_income_title"
+            android:parentActivityName=".Home">
+            <meta-data
+                android:name=".android.support.PARENT_ACTIVITY"
+                android:value=".Home"/>
+        </activity>
     </application>
 
 </manifest>

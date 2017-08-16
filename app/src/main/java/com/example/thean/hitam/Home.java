@@ -49,6 +49,15 @@ public class Home extends AppCompatActivity {
     }
 
     /**
+     * Navigates to the income form
+     * @param view
+     */
+    public void navigateToIncome(View view) {
+        Intent intentCommit = new Intent(this, Income.class);
+        startActivity(intentCommit);
+    }
+
+    /**
      * Cancel arrows for all activities leading off from home.
      *
      * @param keycode
