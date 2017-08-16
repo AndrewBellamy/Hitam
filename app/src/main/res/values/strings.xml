@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Hitam</string>
+    <string name="activity_section_title">Commitments</string>
+    <string name="activity_items_title">Items</string>
+    <string name="activity_income_title">Income</string>
+    <string name="button_home_add">Add</string>
+    <string name="button_home_subtract">Take</string>
+    <string name="button_home_section">Commitments</string>
+    <string name="button_home_income">Income</string>
+    <string name="no_data_result">No Data</string>
 </resources>

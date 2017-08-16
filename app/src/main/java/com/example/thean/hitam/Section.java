@@ -1,7 +1,10 @@
 package com.example.thean.hitam;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -35,6 +38,15 @@ public class Section extends AppCompatActivity {
             sectionList.setAdapter(arrayAdapter);
         } else {
             sectionList.setAdapter(arrayAdapter);
+            sectionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String sectionName = sections.get(position);
+                    Intent intent = new Intent(getApplicationContext(), Item.class);
+                    intent.putExtra("selectedSection", sectionName);
+                    startActivity(intent);
+                }
+            });
         }
     }
 }

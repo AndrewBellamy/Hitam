@@ -118,10 +118,22 @@ public class DBControl extends SQLiteOpenHelper {
 
         while(response.isAfterLast() == false) {
             array_sections.add(response.getString(response.getColumnIndex(SECTION_NAME)));
-            Log.i("section name: ", String.valueOf(response.getColumnIndex(SECTION_NAME)));
             response.moveToNext();
         }
         return array_sections;
+    }
+
+    public ArrayList<String> getItemData(String section) {
+        ArrayList<String> array_items = new ArrayList<String> ();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor response = db.rawQuery("SELECT * FROM "+ITEM_TABLE+" WHERE "+ITEM_SECTION+"='"+section+"'", null);
+        response.moveToFirst();
+
+        while(response.isAfterLast() == false) {
+            array_items.add(response.getString(response.getColumnIndex(ITEM_NAME)));
+            response.moveToNext();
+        }
+        return array_items;
     }
     /*
     public Cursor getData(int id) {
