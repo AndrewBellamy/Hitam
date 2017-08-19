@@ -55,7 +55,7 @@ public class DBControl extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
                 "CREATE TABLE "+INCOME_TABLE+" (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"+INCOME_AMOUNT+" FLOAT, "+INCOME_TAX+" FLOAT, "+INCOME_DEDUCTION+" FLOAT," +
-                        " "+INCOME_FREQ+" INTEGER, "+INCOME_STARTDATE+" DATE)"
+                        " "+INCOME_FREQ+" INTEGER, "+INCOME_STARTDATE+" INTEGER)"
         );
 
         db.execSQL(
@@ -84,6 +84,18 @@ public class DBControl extends SQLiteOpenHelper {
 
     //CUD methods
 
+    public boolean updateIncome(Bundle updateBundle) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(INCOME_AMOUNT, updateBundle.getFloat("amount"));
+        contentValues.put(INCOME_TAX, updateBundle.getFloat("tax"));
+        contentValues.put(INCOME_DEDUCTION, updateBundle.getFloat("deduction"));
+        contentValues.put(INCOME_FREQ, updateBundle.getInt("frequency"));
+        contentValues.put(INCOME_STARTDATE, updateBundle.getLong("startDate"));
+        db.update(INCOME_TABLE, contentValues, "id = ?", new String[] {Integer.toString(updateBundle.getInt("identifier"))});
+        return true;
+    }
+
     /*
     public boolean insertNote(Editable entry, long entrylongdate) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -109,6 +121,41 @@ public class DBControl extends SQLiteOpenHelper {
     }
     */
     //Predicate methods
+    public Bundle getIncomeData() {
+        Bundle responseBundle = new Bundle();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor response = db.rawQuery("SELECT * FROM "+INCOME_TABLE+"", null);
+        Integer identifier = 0;
+        Float amount = 0F;
+        Float tax = 0F;
+        Float deduction = 0F;
+        Integer frequency = 2;
+        Long startDate = 0L;
+
+        Integer count = 0;
+
+        response.moveToFirst();
+
+        while(response.isAfterLast() == false) {
+            identifier = response.getInt(response.getColumnIndex("id"));
+            amount = response.getFloat(response.getColumnIndex(INCOME_AMOUNT));
+            tax = response.getFloat(response.getColumnIndex(INCOME_TAX));
+            deduction = response.getFloat(response.getColumnIndex(INCOME_DEDUCTION));
+            frequency = response.getInt(response.getColumnIndex(INCOME_FREQ));
+            startDate = response.getLong(response.getColumnIndex(INCOME_STARTDATE));
+            response.moveToNext();
+            count++;
+        }
+        if(count > 0) {
+            responseBundle.putInt("identifier", identifier);
+            responseBundle.putFloat("amount", amount);
+            responseBundle.putFloat("tax", tax);
+            responseBundle.putFloat("deduction", deduction);
+            responseBundle.putInt("frequency", frequency);
+            responseBundle.putLong("startDate", startDate);
+        }
+        return responseBundle;
+    }
 
     public ArrayList<String> getSectionData() {
         ArrayList<String> array_sections = new ArrayList<String> ();
