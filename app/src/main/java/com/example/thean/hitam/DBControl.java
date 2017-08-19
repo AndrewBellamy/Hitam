@@ -67,11 +67,20 @@ public class DBControl extends SQLiteOpenHelper {
                         " "+ITEM_PRIORITY+" INTEGER,  "+ITEM_SECTION+" TEXT)"
         );
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(SECTION_NAME, "Unsorted");
-        contentValues.put(SECTION_PRIORITY, 1);
-        contentValues.put(SECTION_TOTAL, 0.00F);
-        db.insert(SECTION_TABLE, null, contentValues);
+        ContentValues sectionValues = new ContentValues();
+        sectionValues.put(SECTION_NAME, "Unsorted");
+        sectionValues.put(SECTION_PRIORITY, 1);
+        sectionValues.put(SECTION_TOTAL, 0.00F);
+        db.insert(SECTION_TABLE, null, sectionValues);
+
+        ContentValues incomeValues = new ContentValues();
+        incomeValues.put(INCOME_AMOUNT, 0.00F);
+        incomeValues.put(INCOME_TAX, 0.00F);
+        incomeValues.put(INCOME_DEDUCTION, 0.00F);
+        incomeValues.put(INCOME_FREQ, 0);
+        java.util.Date dateObject = new java.util.Date();
+        incomeValues.put(INCOME_STARTDATE, dateObject.getTime());
+        db.insert(INCOME_TABLE, null, incomeValues);
     }
 
     @Override
@@ -136,7 +145,7 @@ public class DBControl extends SQLiteOpenHelper {
 
         response.moveToFirst();
 
-        while(response.isAfterLast() == false) {
+        while(response != null && count == 0) {
             identifier = response.getInt(response.getColumnIndex("id"));
             amount = response.getFloat(response.getColumnIndex(INCOME_AMOUNT));
             tax = response.getFloat(response.getColumnIndex(INCOME_TAX));
@@ -145,15 +154,14 @@ public class DBControl extends SQLiteOpenHelper {
             startDate = response.getLong(response.getColumnIndex(INCOME_STARTDATE));
             response.moveToNext();
             count++;
+            Log.i("income id: ", String.valueOf(response.getColumnIndex("id")));
         }
-        if(count > 0) {
-            responseBundle.putInt("identifier", identifier);
-            responseBundle.putFloat("amount", amount);
-            responseBundle.putFloat("tax", tax);
-            responseBundle.putFloat("deduction", deduction);
-            responseBundle.putInt("frequency", frequency);
-            responseBundle.putLong("startDate", startDate);
-        }
+        responseBundle.putInt("identifier", identifier);
+        responseBundle.putFloat("amount", amount);
+        responseBundle.putFloat("tax", tax);
+        responseBundle.putFloat("deduction", deduction);
+        responseBundle.putInt("frequency", frequency);
+        responseBundle.putLong("startDate", startDate);
         return responseBundle;
     }
 

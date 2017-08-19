@@ -1,7 +1,10 @@
 package com.example.thean.hitam;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -61,5 +64,26 @@ public class Income extends AppCompatActivity {
         incomeBundle.putLong("startDate", dateObject.getTime());
         incomeBundle.putInt("identifier", rowID);
         return local_db.updateIncome(incomeBundle);
+    }
+
+    //Setting the menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.income_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+            case R.id.save_action:
+                saveIncome();
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
