@@ -1,8 +1,11 @@
 package com.example.thean.hitam;
 
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,12 +23,20 @@ public class Section extends AppCompatActivity {
     ArrayAdapter<String> arrayAdapter;
     ListView sectionList;
 
+    AlertDialog.Builder builder;
+    AlertDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_section);
 
         local_db = new DBControl(this);
+
+        builder = new AlertDialog.Builder(this);
+        builder.setMessage("Message").setTitle("Title");
+        dialog = builder.create();
+
         sectionList = (ListView) findViewById(R.id.sectionList);
 
         retrieveSections();
@@ -47,6 +58,30 @@ public class Section extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
+        }
+    }
+
+    public void addSection() {
+        dialog.show();
+    }
+
+    //Setting the menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.section_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+            case R.id.add_section_action:
+                addSection();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
