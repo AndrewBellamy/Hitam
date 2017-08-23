@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Hitam</string>
     <string name="activity_section_title">Commitments</string>
-    <string name="activity_items_title">Items</string>
+    <string name="activity_items_title">Expense</string>
+    <string name="activity_additem_title">Add Expense</string>
     <string name="activity_income_title">Income</string>
     <string name="button_home_add">Add</string>
     <string name="button_home_subtract">Take</string>
@@ -13,6 +14,14 @@
     <string name="label_income_deductions">Deductions</string>
     <string name="label_income_freq">Frequency</string>
     <string name="label_income_date">Start Date</string>
+    <string name="add_section_dialog_title">New Commitment</string>
+    <string name="add_section_dialog_input">Name..</string>
+    <string name="add_section_dialog_affirm">Add</string>
+    <string name="add_section_dialog_negate">Cancel</string>
+    <string name="add_item_name">Name</string>
+    <string name="add_item_amount">Amount</string>
+    <string name="add_item_frequency">Frequency</string>
+    <string name="add_item_priority">Priority</string>
     <string-array name="frequency_array">
         <item>Daily</item>
         <item>Weekly</item>

@@ -1,9 +1,11 @@
 package com.example.thean.hitam;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +36,21 @@ public class Section extends AppCompatActivity {
         local_db = new DBControl(this);
 
         builder = new AlertDialog.Builder(this);
-        builder.setMessage("Message").setTitle("Title");
+        LayoutInflater inflater = this.getLayoutInflater();
+        builder.setView(inflater.inflate(R.layout.dialog_add_section, null))
+        .setTitle(R.string.add_section_dialog_title)
+        .setPositiveButton(R.string.add_section_dialog_affirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        })
+        .setNegativeButton(R.string.add_section_dialog_negate, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
         dialog = builder.create();
 
         sectionList = (ListView) findViewById(R.id.sectionList);

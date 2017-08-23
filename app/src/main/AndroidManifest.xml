@@ -21,8 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Home"/>
+        <activity android:name=".Home" />
         <activity
             android:name=".Section"
             android:label="@string/activity_section_title"
@@ -40,13 +39,22 @@
                 android:value=".Section" />
         </activity>
         <activity
+            android:name=".add_item"
+            android:label="@string/activity_additem_title"
+            android:parentActivityName=".Item">
+            <meta-data
+                android:name=".android.support.PARENT_ACTIVITY"
+                android:value=".Item"/>
+        </activity>
+        <activity
             android:name=".Income"
             android:label="@string/activity_income_title"
             android:parentActivityName=".Home">
             <meta-data
                 android:name=".android.support.PARENT_ACTIVITY"
-                android:value=".Home"/>
+                android:value=".Home" />
         </activity>
+
     </application>
 
 </manifest>

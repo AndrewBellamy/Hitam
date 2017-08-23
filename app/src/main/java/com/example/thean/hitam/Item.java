@@ -1,7 +1,11 @@
 package com.example.thean.hitam;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -45,5 +49,40 @@ public class Item extends AppCompatActivity {
         } else {
             itemList.setAdapter(arrayAdapter);
         }
+    }
+
+    //Setting the menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.item_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+            case R.id.add_item_action:
+                Intent addItem = new Intent(this, add_item.class);
+                startActivity(addItem);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Cancel arrows for all activities leading off from home.
+     *
+     * @param keycode
+     * @param event
+     * @return
+     */
+    public boolean onKeyDown(int keycode, KeyEvent event) {
+        if (keycode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(true);
+        }
+        return super.onKeyDown(keycode, event);
     }
 }
