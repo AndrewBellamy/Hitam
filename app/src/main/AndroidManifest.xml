@@ -33,7 +33,9 @@
         <activity
             android:name=".Item"
             android:label="@string/activity_items_title"
-            android:parentActivityName=".Section">
+            android:parentActivityName=".Section"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask">
             <meta-data
                 android:name=".android.support.PARENT_ACTIVITY"
                 android:value=".Section" />

@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ public class Item extends AppCompatActivity {
     private DBControl local_db;
     String section;
     ArrayList<String> items;
+    ArrayList<String> identifiers;
     ArrayAdapter<String> arrayAdapter;
     ListView itemList;
     TextView sectionName;
@@ -42,12 +45,23 @@ public class Item extends AppCompatActivity {
     }
 
     public void retrieveItems() {
-        items = local_db.getItemData(section);
+        Bundle dataBundle = local_db.getItemData(section);
+        items = dataBundle.getStringArrayList("items");
+        identifiers = dataBundle.getStringArrayList("ids");
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
         if (items.size() == 0) {
             itemList.setAdapter(arrayAdapter);
         } else {
             itemList.setAdapter(arrayAdapter);
+            itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Integer itemIdentity = Integer.parseInt(identifiers.get(position));
+                    Intent intent = new Intent(getApplicationContext(), edit_item.class);
+                    intent.putExtra("selectedItem", itemIdentity);
+                    startActivity(intent);
+                }
+            });
         }
     }
 

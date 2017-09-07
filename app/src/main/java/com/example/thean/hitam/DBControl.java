@@ -105,14 +105,34 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
-    /*
-    public boolean insertNote(Editable entry, long entrylongdate) {
+    public boolean insertSection(Editable sectionName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Date entrydate = new Date(entrylongdate);
+        ContentValues sectionValues = new ContentValues();
+        sectionValues.put(SECTION_NAME, String.valueOf(sectionName));
+        sectionValues.put(SECTION_PRIORITY, 1);
+        sectionValues.put(SECTION_TOTAL, 0.00F);
+        db.insert(SECTION_TABLE, null, sectionValues);
+        return true;
+    }
+
+    public boolean updateSection(Integer id, Editable sectionName) {
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(NOTES_DATE, String.valueOf(entrydate));
-        contentValues.put(NOTES_ENTRY, String.valueOf(entry));
-        db.insert("notes", null, contentValues);
+        contentValues.put(SECTION_NAME, String.valueOf(sectionName));
+        db.update(SECTION_TABLE, contentValues, "id = ?", new String[] {Integer.toString(id)});
+        return true;
+    }
+
+    /*
+
+
+    public boolean insertSection(Editable sectionName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues sectionValues = new ContentValues();
+        sectionValues.put(SECTION_NAME, String.valueOf(sectionName));
+        sectionValues.put(SECTION_PRIORITY, 1);
+        sectionValues.put(SECTION_TOTAL, 0.00F);
+        db.insert(SECTION_TABLE, null, sectionValues);
         return true;
     }
 
@@ -165,30 +185,40 @@ public class DBControl extends SQLiteOpenHelper {
         return responseBundle;
     }
 
-    public ArrayList<String> getSectionData() {
+    public Bundle getSectionData() {
         ArrayList<String> array_sections = new ArrayList<String> ();
+        ArrayList<String> array_ids = new ArrayList<String> ();
+        Bundle responseBundle = new Bundle();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor response = db.rawQuery("SELECT * FROM "+SECTION_TABLE+"", null);
         response.moveToFirst();
 
         while(response.isAfterLast() == false) {
             array_sections.add(response.getString(response.getColumnIndex(SECTION_NAME)));
+            array_ids.add(response.getString(response.getColumnIndex("id")));
             response.moveToNext();
         }
-        return array_sections;
+        responseBundle.putStringArrayList("ids", array_ids);
+        responseBundle.putStringArrayList("sections", array_sections);
+        return responseBundle;
     }
 
-    public ArrayList<String> getItemData(String section) {
+    public Bundle getItemData(String section) {
         ArrayList<String> array_items = new ArrayList<String> ();
+        ArrayList<String> array_ids = new ArrayList<String> ();
+        Bundle responseBundle = new Bundle();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor response = db.rawQuery("SELECT * FROM "+ITEM_TABLE+" WHERE "+ITEM_SECTION+"='"+section+"'", null);
         response.moveToFirst();
 
         while(response.isAfterLast() == false) {
             array_items.add(response.getString(response.getColumnIndex(ITEM_NAME)));
+            array_ids.add(response.getString(response.getColumnIndex("id")));
             response.moveToNext();
         }
-        return array_items;
+        responseBundle.putStringArrayList("ids", array_ids);
+        responseBundle.putStringArrayList("items", array_items);
+        return responseBundle;
     }
     /*
     public Cursor getData(int id) {

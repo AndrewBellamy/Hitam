@@ -1,14 +1,17 @@
 package com.example.thean.hitam;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Income extends AppCompatActivity {
@@ -20,6 +23,8 @@ public class Income extends AppCompatActivity {
     DBControl local_db;
     Date dateObject;
     Integer rowID;
+
+    DatePickerDialog datePickerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +54,18 @@ public class Income extends AppCompatActivity {
         Integer frequency = incomeBundle.getInt("frequency");
         Long startDateLong = incomeBundle.getLong("startDate");
         dateObject = new Date(startDateLong);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(startDateLong);
         freqSelect.setSelection(frequency);
-        startDate.setText((CharSequence) String.valueOf(dateObject));
+        startDate.setText((CharSequence) String.valueOf(calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.YEAR)));
         rowID = incomeBundle.getInt("identifier");
+
+        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         return true;
     }
 

@@ -18,6 +18,10 @@
     <string name="add_section_dialog_input">Name..</string>
     <string name="add_section_dialog_affirm">Add</string>
     <string name="add_section_dialog_negate">Cancel</string>
+    <string name="edit_section_dialog_title">This Commitment</string>
+    <string name="edit_section_dialog_input">Name..</string>
+    <string name="edit_section_dialog_affirm">Save</string>
+    <string name="edit_section_dialog_negate">Delete</string>
     <string name="add_item_name">Name</string>
     <string name="add_item_amount">Amount</string>
     <string name="add_item_frequency">Frequency</string>
