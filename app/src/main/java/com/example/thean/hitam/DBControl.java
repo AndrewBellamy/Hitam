@@ -77,7 +77,7 @@ public class DBControl extends SQLiteOpenHelper {
         incomeValues.put(INCOME_AMOUNT, 0.00F);
         incomeValues.put(INCOME_TAX, 0.00F);
         incomeValues.put(INCOME_DEDUCTION, 0.00F);
-        incomeValues.put(INCOME_FREQ, 0);
+        incomeValues.put(INCOME_FREQ, 1);
         java.util.Date dateObject = new java.util.Date();
         incomeValues.put(INCOME_STARTDATE, dateObject.getTime());
         db.insert(INCOME_TABLE, null, incomeValues);
@@ -123,8 +123,29 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean insertItem(Editable itemName, Float amount, Integer frequency, Integer priority, String section) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues itemValues = new ContentValues();
+        itemValues.put(ITEM_NAME, String.valueOf(itemName));
+        itemValues.put(ITEM_AMOUNT, amount);
+        itemValues.put(ITEM_FREQ, frequency);
+        itemValues.put(ITEM_PRIORITY, priority);
+        itemValues.put(ITEM_SECTION, section);
+        db.insert(ITEM_TABLE, null, itemValues);
+        return true;
+    }
     /*
-
+    public boolean insertItem(Editable sectionName, Float amount, Integer frequency, Integer priority, String section) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues itemValues = new ContentValues();
+        itemValues.put(ITEM_NAME, String.valueOf(sectionName));
+        itemValues.put(ITEM_AMOUNT, amount);
+        itemValues.put(ITEM_FREQ, frequency);
+        itemValues.put(ITEM_PRIORITY, priority);
+        itemValues.put(ITEM_SECTION, section);
+        db.insert(ITEM_TABLE, null, sectionValues);
+        return true;
+    }
 
     public boolean insertSection(Editable sectionName) {
         SQLiteDatabase db = this.getWritableDatabase();

@@ -16,8 +16,9 @@ import java.util.ArrayList;
 
 public class Item extends AppCompatActivity {
 
-    //constants
-    private static final int ITEM_NAV = 2;
+    //Constants
+    private static final int EDIT_ITEM = 1;
+    private static final int ADD_ITEM = 2;
 
     private DBControl local_db;
     String section;
@@ -79,13 +80,22 @@ public class Item extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.add_item_action:
                 Intent addItem = new Intent(this, add_item.class);
-                startActivity(addItem);
+                addItem.putExtra("sectionName", section);
+                startActivityForResult(addItem, ADD_ITEM);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == ADD_ITEM) {
+            if(resultCode == RESULT_OK) {
+                retrieveItems();
+            }
+        }
+    }
     /**
      * Cancel arrows for all activities leading off from home.
      *

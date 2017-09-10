@@ -49,22 +49,22 @@ public class Section extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
         final View addView = inflater.inflate(R.layout.dialog_add_section, null);
         builder.setView(addView)
-        .setTitle(R.string.add_section_dialog_title)
-        .setPositiveButton(R.string.add_section_dialog_affirm, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                //Insert new section name on positive
-                sectionName = (EditText) addView.findViewById(R.id.section_name);
-                local_db.insertSection(sectionName.getText());
-                retrieveSections();
-                dialog.cancel();
-            }
-        })
-        .setNegativeButton(R.string.add_section_dialog_negate, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
+                .setTitle(R.string.add_section_dialog_title)
+                .setPositiveButton(R.string.add_section_dialog_affirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        //Insert new section name on positive
+                        sectionName = (EditText) addView.findViewById(R.id.section_name);
+                        local_db.insertSection(sectionName.getText());
+                        retrieveSections();
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(R.string.add_section_dialog_negate, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
 
         dialog = builder.create();
 
