@@ -49,6 +49,14 @@
                 android:value=".Item"/>
         </activity>
         <activity
+            android:name=".edit_item"
+            android:label="@string/activity_edititem_title"
+            android:parentActivityName=".Item">
+            <meta-data
+                android:name=".android.support.PARENT_ACTIVITY"
+                android:value=".Item"/>
+        </activity>
+        <activity
             android:name=".Income"
             android:label="@string/activity_income_title"
             android:parentActivityName=".Home">

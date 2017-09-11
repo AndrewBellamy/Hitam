@@ -30,6 +30,7 @@ public class Section extends AppCompatActivity {
     EditText sectionName;
     View editView;
     Integer editPosition;
+    String selectedSection;
 
     AlertDialog.Builder builder;
     AlertDialog dialog;
@@ -77,7 +78,6 @@ public class Section extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 sectionName = (EditText) editView.findViewById(R.id.section_name);
-                Log.i("id", String.valueOf(editPosition));
                 local_db.updateSection(editPosition, sectionName.getText());
                 retrieveSections();
                 dialog.cancel();
@@ -85,6 +85,9 @@ public class Section extends AppCompatActivity {
         })
         .setNegativeButton(R.string.edit_section_dialog_negate, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                local_db.deleteSection(editPosition);
+                local_db.unsortItems(selectedSection);
+                retrieveSections();
                 dialog.cancel();
             }
         });
@@ -117,7 +120,6 @@ public class Section extends AppCompatActivity {
             sectionList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.i("id", identifiers.get(position));
                     if(id != 0) {
                         String sectionName = sections.get(position);
                         editPosition = Integer.parseInt(identifiers.get(position));
@@ -133,12 +135,13 @@ public class Section extends AppCompatActivity {
         dialog.show();
     }
 
-    public void editSection(final String selectedSection) {
+    public void editSection(final String section) {
+        selectedSection = section;
         dialog_edit.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 sectionName = (EditText) editView.findViewById(R.id.section_name);
-                sectionName.setText((CharSequence) selectedSection);
+                sectionName.setText((CharSequence) section);
             }
         });
         dialog_edit.show();

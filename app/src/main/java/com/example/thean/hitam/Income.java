@@ -24,16 +24,12 @@ import java.util.Date;
 
 public class Income extends AppCompatActivity {
 
-
-    EditText amountNumber, taxNumber, deductionNumber, startDate;
-    EditText freqSelect;
-    Integer freqValue;
+    //Variables
+    EditText amountNumber, taxNumber, deductionNumber, startDate, freqSelect;
+    Integer freqValue, rowID;
     ArrayAdapter<String> adapter;
-    ArrayList<Integer> keys = new ArrayList<Integer>();
-    ArrayList<String> values = new ArrayList<String>();
     DBControl local_db;
     Date dateObject;
-    Integer rowID;
     ListView dialogList;
     View frequencyView;
 
@@ -41,28 +37,26 @@ public class Income extends AppCompatActivity {
     AlertDialog frequency;
 
     DatePickerDialog datePickerDialog;
+    utility hitamUtility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_income);
 
+        //Setup database and utility classes
         local_db = new DBControl(this);
+        hitamUtility = new utility(this);
 
+        //Create control delegates
         amountNumber = (EditText) findViewById(R.id.amountNumber);
         taxNumber = (EditText) findViewById(R.id.taxNumber);
         deductionNumber = (EditText) findViewById(R.id.deductionNumber);
         startDate = (EditText) findViewById(R.id.startDate);
         freqSelect = (EditText) findViewById(R.id.incomeFrequency);
 
-        String[] frequencyArray = getResources().getStringArray(R.array.frequency_array);
-        for(String entry : frequencyArray) {
-            String[] pair = entry.split(":");
-            Log.i("Key", pair[0]);
-            Log.i("Value", pair[1]);
-            values.add(pair[0]);
-            keys.add(Integer.parseInt(pair[1]));
-        }
+        //populate array lists for frequency
+        hitamUtility.setFrequencyList();
 
         //Set frequency
         builder = new AlertDialog.Builder(this);
@@ -70,29 +64,34 @@ public class Income extends AppCompatActivity {
         frequencyView = inflater.inflate(R.layout.dialog_select_value, null);
         builder.setView(frequencyView)
                 .setTitle(R.string.set_frequency_dialog_title);
-
         frequency = builder.create();
+
+        //Finally
         retrieveIncome();
     }
 
     public boolean retrieveIncome() {
+        //Get the income data
         Bundle incomeBundle = local_db.getIncomeData();
         amountNumber.setText((CharSequence) String.valueOf(incomeBundle.getFloat("amount")));
         taxNumber.setText((CharSequence) String.valueOf(incomeBundle.getFloat("tax")));
         deductionNumber.setText((CharSequence) String.valueOf(incomeBundle.getFloat("deduction")));
         Integer frequencyPosition = incomeBundle.getInt("frequency");
         Long startDateLong = incomeBundle.getLong("startDate");
-        dateObject = new Date(startDateLong);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(startDateLong);
-        if(values.size() > 0) {
-            Log.i("Frequency", String.valueOf(frequencyPosition));
-            freqSelect.setText((CharSequence) values.get(keys.indexOf(frequencyPosition)));
+        rowID = incomeBundle.getInt("identifier");
+
+        //Set the integer to frequency string
+        if(hitamUtility.values.size() > 0) {
+            freqSelect.setText((CharSequence) hitamUtility.values.get(hitamUtility.keys.indexOf(frequencyPosition)));
         } else {
             freqSelect.setText((CharSequence) "");
         }
+
+        //Create the date object and dialog
+        dateObject = new Date(startDateLong);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(startDateLong);
         startDate.setText((CharSequence) String.valueOf(calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.YEAR)));
-        rowID = incomeBundle.getInt("identifier");
 
         datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -101,6 +100,7 @@ public class Income extends AppCompatActivity {
                 datePickerDialog.dismiss();
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
         return true;
     }
 
@@ -125,16 +125,16 @@ public class Income extends AppCompatActivity {
             @Override
             public void onShow(DialogInterface dialogInterface) {
             dialogList = (ListView) frequencyView.findViewById(R.id.selectArrayList);
-            adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item, values);
-            if (values.size() == 0) {
+            adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item, hitamUtility.values);
+            if (hitamUtility.values.size() == 0) {
                 dialogList.setAdapter(adapter);
             } else {
                 dialogList.setAdapter(adapter);
                 dialogList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        freqSelect.setText((CharSequence) values.get(position));
-                        freqValue = keys.get(position);
+                        freqSelect.setText((CharSequence) hitamUtility.values.get(position));
+                        freqValue = hitamUtility.keys.get(position);
                         frequency.dismiss();
                     }
                 });

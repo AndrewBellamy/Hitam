@@ -123,6 +123,12 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean deleteSection(Integer id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(SECTION_TABLE, "id = ? ", new String[] {Integer.toString(id)});
+        return true;
+    }
+
     public boolean insertItem(Editable itemName, Float amount, Integer frequency, Integer priority, String section) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues itemValues = new ContentValues();
@@ -134,7 +140,45 @@ public class DBControl extends SQLiteOpenHelper {
         db.insert(ITEM_TABLE, null, itemValues);
         return true;
     }
+
+    public boolean updateItem(Bundle updateBundle) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues itemValues = new ContentValues();
+        itemValues.put(ITEM_NAME, updateBundle.getString("name"));
+        itemValues.put(ITEM_AMOUNT, updateBundle.getFloat("amount"));
+        itemValues.put(ITEM_FREQ, updateBundle.getInt("frequency"));
+        itemValues.put(ITEM_PRIORITY, updateBundle.getInt("priority"));
+        db.update(ITEM_TABLE, itemValues, "id = ?", new String[] {Integer.toString(updateBundle.getInt("identifier"))});
+        return true;
+    }
+
+    public boolean unsortItems(String section) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues itemValues = new ContentValues();
+        itemValues.put(ITEM_SECTION, "Unsorted");
+        db.update(ITEM_TABLE, itemValues, ITEM_SECTION+" = ?", new String[] {section});
+        return true;
+    }
+
+    public boolean deleteItem(Integer id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(ITEM_TABLE, "id = ? ", new String[] {Integer.toString(id)});
+        return true;
+    }
     /*
+
+
+
+    public Integer deleteSection(Integer id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(SECTION_TABLE, "id = ? ", new String[] {Integer.toString(id)});
+    }
+
+    public Integer deleteItem(Integer id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(ITEM_TABLE, "id = ? ", new String[] {Integer.toString(id)});
+    }
+
     public boolean insertItem(Editable sectionName, Float amount, Integer frequency, Integer priority, String section) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues itemValues = new ContentValues();
@@ -241,7 +285,14 @@ public class DBControl extends SQLiteOpenHelper {
         responseBundle.putStringArrayList("items", array_items);
         return responseBundle;
     }
+
+    public Cursor getItemDataByIdentifier(Integer identifier) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor response = db.rawQuery("SELECT * FROM "+ITEM_TABLE+" WHERE id='"+identifier+"'", null);
+        return response;
+    }
     /*
+
     public Cursor getData(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor response = db.rawQuery("SELECT * FROM notes WHERE id="+id+"", null);

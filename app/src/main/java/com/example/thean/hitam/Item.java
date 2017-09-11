@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -60,7 +61,7 @@ public class Item extends AppCompatActivity {
                     Integer itemIdentity = Integer.parseInt(identifiers.get(position));
                     Intent intent = new Intent(getApplicationContext(), edit_item.class);
                     intent.putExtra("selectedItem", itemIdentity);
-                    startActivity(intent);
+                    startActivityForResult(intent, EDIT_ITEM);
                 }
             });
         }
@@ -92,6 +93,17 @@ public class Item extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == ADD_ITEM) {
             if(resultCode == RESULT_OK) {
+                Toast.makeText(this, R.string.add_item_success_message, Toast.LENGTH_SHORT).show();
+                retrieveItems();
+            }
+        }
+        if(requestCode == EDIT_ITEM) {
+            if(resultCode == RESULT_OK) {
+                Toast.makeText(this, R.string.edit_item_success_message, Toast.LENGTH_SHORT).show();
+                retrieveItems();
+            }
+            if(resultCode == RESULT_FIRST_USER) {
+                Toast.makeText(this, R.string.edit_item_delete_message, Toast.LENGTH_SHORT).show();
                 retrieveItems();
             }
         }

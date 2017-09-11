@@ -3,6 +3,7 @@
     <string name="activity_section_title">Commitments</string>
     <string name="activity_items_title">Expense</string>
     <string name="activity_additem_title">Add Expense</string>
+    <string name="activity_edititem_title">Edit Expense</string>
     <string name="activity_income_title">Income</string>
     <string name="button_home_add">Add</string>
     <string name="button_home_subtract">Take</string>
@@ -28,6 +29,11 @@
     <string name="add_item_amount">Amount</string>
     <string name="add_item_frequency">Frequency</string>
     <string name="add_item_priority">Priority</string>
+    <string name="add_item_validation">Complete all fields</string>
+    <string name="add_item_success_message">Expense Added</string>
+    <string name="edit_item_success_message">Expense Updated</string>
+    <string name="edit_item_delete_message">Expense Deleted</string>
+    <string name="generic_error">An Error Occurred. Log with developer</string>
     <string-array name="frequency_array">
         <item>Daily:1</item>
         <item>Weekly:7</item>
