@@ -33,6 +33,7 @@
     <string name="add_item_success_message">Expense Added</string>
     <string name="edit_item_success_message">Expense Updated</string>
     <string name="edit_item_delete_message">Expense Deleted</string>
+    <string name="section_background_success">Sections have been updated</string>
     <string name="generic_error">An Error Occurred. Log with developer</string>
     <string-array name="frequency_array">
         <item>Daily:1</item>

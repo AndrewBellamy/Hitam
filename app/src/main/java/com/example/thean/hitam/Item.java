@@ -22,6 +22,8 @@ public class Item extends AppCompatActivity {
     private static final int ADD_ITEM = 2;
 
     private DBControl local_db;
+    utility hitamUtility;
+
     String section;
     ArrayList<String> items;
     ArrayList<String> identifiers;
@@ -41,6 +43,7 @@ public class Item extends AppCompatActivity {
 
 
         local_db = new DBControl(this);
+        hitamUtility = new utility(this);
         itemList = (ListView) findViewById(R.id.itemList);
 
         retrieveItems();
@@ -93,17 +96,20 @@ public class Item extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == ADD_ITEM) {
             if(resultCode == RESULT_OK) {
-                Toast.makeText(this, R.string.add_item_success_message, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, R.string.add_item_success_message, Toast.LENGTH_SHORT).show();
+                hitamUtility.calculateSection(section);
                 retrieveItems();
             }
         }
         if(requestCode == EDIT_ITEM) {
             if(resultCode == RESULT_OK) {
-                Toast.makeText(this, R.string.edit_item_success_message, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, R.string.edit_item_success_message, Toast.LENGTH_SHORT).show();
+                hitamUtility.calculateSection(section);
                 retrieveItems();
             }
             if(resultCode == RESULT_FIRST_USER) {
-                Toast.makeText(this, R.string.edit_item_delete_message, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, R.string.edit_item_delete_message, Toast.LENGTH_SHORT).show();
+                hitamUtility.calculateSection(section);
                 retrieveItems();
             }
         }

@@ -69,7 +69,7 @@ public class DBControl extends SQLiteOpenHelper {
 
         ContentValues sectionValues = new ContentValues();
         sectionValues.put(SECTION_NAME, "Unsorted");
-        sectionValues.put(SECTION_PRIORITY, 1);
+        sectionValues.put(SECTION_PRIORITY, 3);
         sectionValues.put(SECTION_TOTAL, 0.00F);
         db.insert(SECTION_TABLE, null, sectionValues);
 
@@ -123,6 +123,15 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean setSectionByItems(String section, Integer priority, Float total) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SECTION_PRIORITY, priority);
+        contentValues.put(SECTION_TOTAL, total);
+        db.update(SECTION_TABLE, contentValues, SECTION_NAME+" = ?", new String[] {section});
+        return true;
+    }
+
     public boolean deleteSection(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(SECTION_TABLE, "id = ? ", new String[] {Integer.toString(id)});
@@ -160,15 +169,20 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateItemSection(String currentSection, Editable newSection) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues itemValues = new ContentValues();
+        itemValues.put(ITEM_SECTION, String.valueOf(newSection));
+        db.update(ITEM_TABLE, itemValues, ITEM_SECTION+" = ?", new String[] {currentSection});
+        return true;
+    }
+
     public boolean deleteItem(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(ITEM_TABLE, "id = ? ", new String[] {Integer.toString(id)});
         return true;
     }
     /*
-
-
-
     public Integer deleteSection(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(SECTION_TABLE, "id = ? ", new String[] {Integer.toString(id)});
@@ -255,7 +269,7 @@ public class DBControl extends SQLiteOpenHelper {
         ArrayList<String> array_ids = new ArrayList<String> ();
         Bundle responseBundle = new Bundle();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor response = db.rawQuery("SELECT * FROM "+SECTION_TABLE+"", null);
+        Cursor response = db.rawQuery("SELECT * FROM "+SECTION_TABLE+" ORDER BY "+SECTION_PRIORITY+" DESC", null);
         response.moveToFirst();
 
         while(response.isAfterLast() == false) {
@@ -273,7 +287,7 @@ public class DBControl extends SQLiteOpenHelper {
         ArrayList<String> array_ids = new ArrayList<String> ();
         Bundle responseBundle = new Bundle();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor response = db.rawQuery("SELECT * FROM "+ITEM_TABLE+" WHERE "+ITEM_SECTION+"='"+section+"'", null);
+        Cursor response = db.rawQuery("SELECT * FROM "+ITEM_TABLE+" WHERE "+ITEM_SECTION+"='"+section+"' ORDER BY "+ITEM_PRIORITY+" DESC", null);
         response.moveToFirst();
 
         while(response.isAfterLast() == false) {
@@ -291,7 +305,36 @@ public class DBControl extends SQLiteOpenHelper {
         Cursor response = db.rawQuery("SELECT * FROM "+ITEM_TABLE+" WHERE id='"+identifier+"'", null);
         return response;
     }
+
+    public Float getItemTotal(String section) {
+        ArrayList<Float> array_amounts = new ArrayList<Float> ();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor response = db.rawQuery("SELECT TOTAL("+ITEM_AMOUNT+") FROM "+ITEM_TABLE+" WHERE "+ITEM_SECTION+"='"+section+"'", null);
+        response.moveToFirst();
+
+        return response.getFloat(0);
+    }
+
+    public Float getAllItemSum() {
+        ArrayList<Float> array_amounts = new ArrayList<Float> ();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor response = db.rawQuery("SELECT TOTAL("+ITEM_AMOUNT+") FROM "+ITEM_TABLE+"", null);
+        response.moveToFirst();
+
+        return response.getFloat(0);
+    }
+
+    public Integer getItemPriority(String section) {
+        ArrayList<Integer> array_priority = new ArrayList<Integer>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor response = db.rawQuery("SELECT AVG("+ITEM_PRIORITY+") FROM "+ITEM_TABLE+" WHERE "+ITEM_SECTION+"='"+section+"'", null);
+        response.moveToFirst();
+
+        return response.getInt(0);
+    }
     /*
+
+
 
     public Cursor getData(int id) {
         SQLiteDatabase db = this.getReadableDatabase();

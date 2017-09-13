@@ -1,7 +1,11 @@
 package com.example.thean.hitam;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -17,8 +21,12 @@ public class utility {
 
     Context utilityContext;
 
+    private DBControl local_db;
+
+
     public utility(Context context) {
         utilityContext = context;
+        local_db = new DBControl(context);
     }
 
     public void clearAddItemArrays() {
@@ -46,15 +54,28 @@ public class utility {
         }
     }
 
-    public void calculateBalance() {
+    public Float calculateBalance() {
 
+        return 0.00F;
     }
 
-    public void calculateSectionPriority() {
+    public void calculateSection(final String section) {
+        if(section != "Unsorted") {
+            Runnable calculate = new Runnable() {
+                @Override
+                public void run() {
+                    Float total = local_db.getItemTotal(section);
 
-    }
+                    Log.i("total", String.valueOf(total));
 
-    public void caluclateSectionAmount() {
+                    Integer avgPriority = local_db.getItemPriority(section);
 
+                    Log.i("average priority", String.valueOf(avgPriority));
+
+                    local_db.setSectionByItems(section, avgPriority, total);
+                }
+            };
+            new Thread(calculate).start();
+        }
     }
 }

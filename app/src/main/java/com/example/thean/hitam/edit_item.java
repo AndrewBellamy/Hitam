@@ -18,6 +18,7 @@ import android.widget.Toast;
 public class edit_item extends AppCompatActivity {
 
     EditText editItemName, editItemAmount, editItemFreq, editItemPriority;
+    String section;
 
     Integer freqValue = 0;
     Integer prioValue = 0;
@@ -85,10 +86,15 @@ public class edit_item extends AppCompatActivity {
         Cursor response = local_db.getItemDataByIdentifier(extras.getInt("selectedItem"));
         response.moveToFirst();
 
-        editItemName.setText((CharSequence) response.getString(response.getColumnIndex(DBControl.ITEM_NAME)));
-        editItemAmount.setText((CharSequence) response.getString(response.getColumnIndex(DBControl.ITEM_AMOUNT)));
         Integer frequencyPosition = response.getInt(response.getColumnIndex(DBControl.ITEM_FREQ));
+        Float amountSingular = response.getFloat(response.getColumnIndex(DBControl.ITEM_AMOUNT));
+        Float amountDetermined = amountSingular * frequencyPosition;
+
+        editItemName.setText((CharSequence) response.getString(response.getColumnIndex(DBControl.ITEM_NAME)));
+        editItemAmount.setText((CharSequence) String.valueOf(amountDetermined));
+
         Integer priorityPosition = response.getInt(response.getColumnIndex(DBControl.ITEM_PRIORITY));
+        section = response.getString(response.getColumnIndex(DBControl.ITEM_SECTION));
 
         hitamUtility.setFrequencyList();
 
@@ -166,9 +172,11 @@ public class edit_item extends AppCompatActivity {
     }
 
     public boolean updateItem() {
+        Float amountEntered = Float.parseFloat(String.valueOf(editItemAmount.getText()));
+        Float amountSingular = amountEntered / freqValue;
         Bundle itemBundle = new Bundle();
         itemBundle.putString("name", String.valueOf(editItemName.getText()));
-        itemBundle.putFloat("amount", Float.parseFloat(String.valueOf(editItemAmount.getText())));
+        itemBundle.putFloat("amount", amountSingular);
         itemBundle.putInt("frequency", freqValue);
         itemBundle.putInt("priority", prioValue);
         itemBundle.putInt("identifier", extras.getInt("selectedItem"));

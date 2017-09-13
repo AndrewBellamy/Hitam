@@ -76,13 +76,13 @@ public class Income extends AppCompatActivity {
         amountNumber.setText((CharSequence) String.valueOf(incomeBundle.getFloat("amount")));
         taxNumber.setText((CharSequence) String.valueOf(incomeBundle.getFloat("tax")));
         deductionNumber.setText((CharSequence) String.valueOf(incomeBundle.getFloat("deduction")));
-        Integer frequencyPosition = incomeBundle.getInt("frequency");
+        freqValue = incomeBundle.getInt("frequency");
         Long startDateLong = incomeBundle.getLong("startDate");
         rowID = incomeBundle.getInt("identifier");
 
         //Set the integer to frequency string
         if(hitamUtility.values.size() > 0) {
-            freqSelect.setText((CharSequence) hitamUtility.values.get(hitamUtility.keys.indexOf(frequencyPosition)));
+            freqSelect.setText((CharSequence) hitamUtility.values.get(hitamUtility.keys.indexOf(freqValue)));
         } else {
             freqSelect.setText((CharSequence) "");
         }

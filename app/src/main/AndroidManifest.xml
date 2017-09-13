@@ -21,7 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Home" />
+        <activity
+            android:name=".Home"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".Section"
             android:label="@string/activity_section_title"

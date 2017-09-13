@@ -19,18 +19,18 @@ import java.util.ArrayList;
 
 public class Section extends AppCompatActivity {
 
-    //constants
-    private static final int ITEM_NAV = 2;
-
     private DBControl local_db;
     ArrayList<String> sections;
     ArrayList<String> identifiers;
     ArrayAdapter<String> arrayAdapter;
     ListView sectionList;
-    EditText sectionName;
-    View editView;
     Integer editPosition;
     String selectedSection;
+
+    //Dialog views
+    View addView;
+    View editView;
+    EditText sectionName;
 
     AlertDialog.Builder builder;
     AlertDialog dialog;
@@ -48,7 +48,7 @@ public class Section extends AppCompatActivity {
         //Add dialog
         builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
-        final View addView = inflater.inflate(R.layout.dialog_add_section, null);
+        addView = inflater.inflate(R.layout.dialog_add_section, null);
         builder.setView(addView)
                 .setTitle(R.string.add_section_dialog_title)
                 .setPositiveButton(R.string.add_section_dialog_affirm, new DialogInterface.OnClickListener() {
@@ -79,6 +79,7 @@ public class Section extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id) {
                 sectionName = (EditText) editView.findViewById(R.id.section_name);
                 local_db.updateSection(editPosition, sectionName.getText());
+                local_db.updateItemSection(selectedSection, sectionName.getText());
                 retrieveSections();
                 dialog.cancel();
             }
@@ -132,6 +133,13 @@ public class Section extends AppCompatActivity {
     }
 
     public void addSection() {
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                sectionName = (EditText) addView.findViewById(R.id.section_name);
+                sectionName.setText((CharSequence) "");
+            }
+        });
         dialog.show();
     }
 
@@ -140,8 +148,8 @@ public class Section extends AppCompatActivity {
         dialog_edit.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
-                sectionName = (EditText) editView.findViewById(R.id.section_name);
-                sectionName.setText((CharSequence) section);
+            sectionName = (EditText) editView.findViewById(R.id.section_name);
+            sectionName.setText((CharSequence) selectedSection);
             }
         });
         dialog_edit.show();

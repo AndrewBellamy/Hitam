@@ -135,7 +135,9 @@ public class add_item extends AppCompatActivity {
         if(freqValue == 0 && prioValue == 0) {
             Toast.makeText(getApplicationContext(), R.string.add_item_validation, Toast.LENGTH_SHORT).show();
         } else {
-            local_db.insertItem(addItemName.getText(), Float.parseFloat(String.valueOf(addItemAmount.getText())), freqValue, prioValue, addItemSection);
+            Float amountEntered = Float.parseFloat(String.valueOf(addItemAmount.getText()));
+            Float amountSingular = amountEntered / freqValue;
+            local_db.insertItem(addItemName.getText(), amountSingular, freqValue, prioValue, addItemSection);
             if (getParent() == null) {
                 setResult(RESULT_OK);
             } else {
