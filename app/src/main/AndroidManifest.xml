@@ -34,6 +34,18 @@
                 android:value=".Home" />
         </activity>
         <activity
+            android:name=".Preferences"
+            android:label="@string/activity_preferences_title"
+            android:parentActivityName=".Home">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Home" />
+            <intent-filter>
+                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".Item"
             android:label="@string/activity_items_title"
             android:parentActivityName=".Section"

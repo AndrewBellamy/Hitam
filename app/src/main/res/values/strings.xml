@@ -5,10 +5,12 @@
     <string name="activity_additem_title">Add Expense</string>
     <string name="activity_edititem_title">Edit Expense</string>
     <string name="activity_income_title">Income</string>
+    <string name="activity_preferences_title">Preferences</string>
     <string name="button_home_add">Add</string>
     <string name="button_home_subtract">Take</string>
     <string name="button_home_section">Commitments</string>
     <string name="button_home_income">Income</string>
+    <string name="button_home_end">End</string>
     <string name="no_data_result">No Data</string>
     <string name="label_income_amount">Amount</string>
     <string name="label_income_tax">Tax</string>
@@ -49,4 +51,27 @@
         <item>Low:1</item>
     </string-array>
     <string name="button_income_finish">End</string>
+    <string name="preferences_sign_in">Sign In</string>
+    <string name="preferences_sign_out">Sign Out</string>
+    <string name="preferences_create_new">Create New Account</string>
+    <string name="preferences_auth_username">Email</string>
+    <string name="preferences_auth_password">Password</string>
+    <string name="preferences_night_mode">Night Mode</string>
+    <string name="preferences_currency">Select Currency</string>
+    <string-array name="preferences_currencies">
+        <item>AUD</item>
+        <item>USD</item>
+        <item>GBP</item>
+    </string-array>
+    <string name="auth_title">Authentication</string>
+    <string name="auth_login_dialog_title">Sign In</string>
+    <string name="auth_create_dialog_title">Create Account</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_login_success">Signed In</string>
+    <string name="auth_logout_success">Signed out</string>
+    <string name="auth_create_success">Verify Account by Email</string>
+    <string name="auth_error">Error, check network connection</string>
+    <string name="firebase_write_success">Saved balance for today</string>
+    <string name="firebase_no_user">Save requires login</string>
 </resources>

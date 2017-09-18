@@ -31,8 +31,8 @@
         android:ems="10"
         android:inputType="numberDecimal"
         app:layout_constraintTop_toBottomOf="@+id/startDate"
-        app:layout_constraintRight_toLeftOf="@+id/button2"
-        android:layout_marginRight="8dp" />
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
@@ -54,12 +54,12 @@
         android:layout_width="215dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="15dp"
         android:ems="10"
         android:inputType="numberDecimal"
         app:layout_constraintTop_toBottomOf="@+id/amountNumber"
-        app:layout_constraintRight_toLeftOf="@+id/button2"
-        android:layout_marginRight="8dp" />
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
@@ -86,8 +86,8 @@
         android:ems="10"
         android:inputType="numberDecimal"
         app:layout_constraintTop_toBottomOf="@+id/taxNumber"
-        app:layout_constraintRight_toLeftOf="@+id/button2"
-        android:layout_marginRight="8dp" />
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/textView4"
@@ -102,7 +102,7 @@
         app:layout_constraintRight_toLeftOf="@+id/incomeFrequency"
         android:layout_marginRight="8dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/incomeFrequency"
-        app:layout_constraintHorizontal_bias="0.506" />
+        app:layout_constraintHorizontal_bias="0.54" />
 
     <TextView
         android:id="@+id/textView5"
@@ -130,14 +130,14 @@
         android:inputType="date"
         android:onClick="selectStartDate"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/button2"
-        android:layout_marginRight="16dp" />
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <EditText
         android:id="@+id/incomeFrequency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="14dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:focusable="false"
@@ -145,19 +145,7 @@
         android:inputType="textPersonName"
         android:onClick="selectFrequency"
         app:layout_constraintTop_toBottomOf="@+id/deductionNumber"
-        app:layout_constraintRight_toLeftOf="@+id/button2"
-        android:layout_marginRight="8dp" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="88dp"
-        android:layout_height="0dp"
         android:layout_marginRight="16dp"
-        android:background="?attr/selectableItemBackground"
-        android:text="@string/button_income_finish"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

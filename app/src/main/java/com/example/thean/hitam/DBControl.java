@@ -44,6 +44,10 @@ public class DBControl extends SQLiteOpenHelper {
     public static final String ITEM_PRIORITY = "priority";
     public static final String ITEM_SECTION = "section";
 
+    //Spend
+    public static final String SPEND_TABLE = "spendTable";
+    public static final String SPEND_TAKE = "subtract";
+    public static final String SPEND_AMOUNT = "amount";
 
     public DBControl(Context context) {
         super(context, DATABASE_NAME , null, 1);
@@ -67,6 +71,10 @@ public class DBControl extends SQLiteOpenHelper {
                         " "+ITEM_PRIORITY+" INTEGER,  "+ITEM_SECTION+" TEXT)"
         );
 
+        db.execSQL(
+                "CREATE TABLE "+SPEND_TABLE+" (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "+SPEND_TAKE+" INTEGER, "+SPEND_AMOUNT+" FLOAT)"
+        );
+
         ContentValues sectionValues = new ContentValues();
         sectionValues.put(SECTION_NAME, "Unsorted");
         sectionValues.put(SECTION_PRIORITY, 3);
@@ -88,6 +96,7 @@ public class DBControl extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS "+INCOME_TABLE+"");
         db.execSQL("DROP TABLE IF EXISTS "+SECTION_TABLE+"");
         db.execSQL("DROP TABLE IF EXISTS "+ITEM_TABLE+"");
+        db.execSQL("DROP TABLE IF EXISTS "+SPEND_TABLE+"");
         onCreate(db);
     }
 
@@ -182,52 +191,22 @@ public class DBControl extends SQLiteOpenHelper {
         db.delete(ITEM_TABLE, "id = ? ", new String[] {Integer.toString(id)});
         return true;
     }
-    /*
-    public Integer deleteSection(Integer id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(SECTION_TABLE, "id = ? ", new String[] {Integer.toString(id)});
-    }
 
-    public Integer deleteItem(Integer id) {
+    public boolean insertSpend(Integer take, Float amount) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(ITEM_TABLE, "id = ? ", new String[] {Integer.toString(id)});
-    }
-
-    public boolean insertItem(Editable sectionName, Float amount, Integer frequency, Integer priority, String section) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues itemValues = new ContentValues();
-        itemValues.put(ITEM_NAME, String.valueOf(sectionName));
-        itemValues.put(ITEM_AMOUNT, amount);
-        itemValues.put(ITEM_FREQ, frequency);
-        itemValues.put(ITEM_PRIORITY, priority);
-        itemValues.put(ITEM_SECTION, section);
-        db.insert(ITEM_TABLE, null, sectionValues);
+        ContentValues spendValues = new ContentValues();
+        spendValues.put(SPEND_TAKE, take);
+        spendValues.put(SPEND_AMOUNT, amount);
+        db.insert(SPEND_TABLE, null, spendValues);
         return true;
     }
 
-    public boolean insertSection(Editable sectionName) {
+    public boolean deleteSpend() {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues sectionValues = new ContentValues();
-        sectionValues.put(SECTION_NAME, String.valueOf(sectionName));
-        sectionValues.put(SECTION_PRIORITY, 1);
-        sectionValues.put(SECTION_TOTAL, 0.00F);
-        db.insert(SECTION_TABLE, null, sectionValues);
+        db.delete(SPEND_TABLE, "", new String[] {});
         return true;
     }
 
-    public boolean updateNote(Integer id, Editable entry) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(NOTES_ENTRY, String.valueOf(entry));
-        db.update("notes", contentValues, "id = ?", new String[] {Integer.toString(id)});
-        return true;
-    }
-
-    public Integer deleteNote (Integer id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete("notes", "id = ? ", new String[] {Integer.toString(id)});
-    }
-    */
     //Predicate methods
     public Bundle getIncomeData() {
         Bundle responseBundle = new Bundle();
@@ -307,7 +286,6 @@ public class DBControl extends SQLiteOpenHelper {
     }
 
     public Float getItemTotal(String section) {
-        ArrayList<Float> array_amounts = new ArrayList<Float> ();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor response = db.rawQuery("SELECT TOTAL("+ITEM_AMOUNT+") FROM "+ITEM_TABLE+" WHERE "+ITEM_SECTION+"='"+section+"'", null);
         response.moveToFirst();
@@ -316,7 +294,6 @@ public class DBControl extends SQLiteOpenHelper {
     }
 
     public Float getAllItemSum() {
-        ArrayList<Float> array_amounts = new ArrayList<Float> ();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor response = db.rawQuery("SELECT TOTAL("+ITEM_AMOUNT+") FROM "+ITEM_TABLE+"", null);
         response.moveToFirst();
@@ -325,40 +302,11 @@ public class DBControl extends SQLiteOpenHelper {
     }
 
     public Integer getItemPriority(String section) {
-        ArrayList<Integer> array_priority = new ArrayList<Integer>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor response = db.rawQuery("SELECT AVG("+ITEM_PRIORITY+") FROM "+ITEM_TABLE+" WHERE "+ITEM_SECTION+"='"+section+"'", null);
         response.moveToFirst();
 
         return response.getInt(0);
     }
-    /*
 
-
-
-    public Cursor getData(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor response = db.rawQuery("SELECT * FROM notes WHERE id="+id+"", null);
-        return response;
-    }
-
-    public Bundle getDataByDate(long selectedDateLong) {
-        ArrayList<String> array_entries = new ArrayList<String> ();
-        ArrayList<String> array_ids = new ArrayList<String> ();
-        Bundle responseBundle = new Bundle();
-        Date selectedDate = new Date(selectedDateLong);
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor response = db.rawQuery("SELECT * FROM notes WHERE entrydate=Date('"+String.valueOf(selectedDate)+"')", null);
-        response.moveToFirst();
-
-        while(response.isAfterLast() == false) {
-            array_entries.add(response.getString(response.getColumnIndex(NOTES_ENTRY)));
-            array_ids.add(response.getString(response.getColumnIndex(NOTES_ID)));
-            response.moveToNext();
-        }
-        responseBundle.putStringArrayList("ids", array_ids);
-        responseBundle.putStringArrayList("entries", array_entries);
-        return responseBundle;
-    }
-    */
 }

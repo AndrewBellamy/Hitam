@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/auth_title">
+        <com.example.thean.hitam.createAccountDialog
+            android:title="@string/auth_create_dialog_title"
+            android:key="auth_create_preference"
+            />
+        <com.example.thean.hitam.signinAccountDialog
+            android:id="@+id/sign_in"
+            android:title="@string/auth_login_dialog_title"
+            android:key="auth_login_preference"
+            />
+        <Preference
+            android:id="@+id/sign_out"
+            android:title="@string/preferences_sign_out"
+            android:key="auth_sign_out"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>
