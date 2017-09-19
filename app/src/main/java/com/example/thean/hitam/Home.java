@@ -1,34 +1,46 @@
 package com.example.thean.hitam;
 
-import android.accounts.AccountManager;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.Date;
+
+/**
+ * Created by Andrew Bellamy.
+ * For Hitam | Assignment 2 SIT207
+ * Student ID: 215240036
+ */
 
 public class Home extends AppCompatActivity {
 
-
-    private static final int TAG_CLOUD = 1;
+    //Constants
     private static final int SECTION_NAV = 2;
     private static final int INCOME_NAV = 3;
-    private static final int ADD_DIALOG = 4;
-    private static final int SUB_DIALOG = 5;
 
+    //Global variables
     DBControl local_db;
+    static FBControl hitamFB;
+    //Controls
     TextView float_text;
+    //Dialogs
+    View spendingView;
+    AlertDialog.Builder builder;
+    AlertDialog spending;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +53,47 @@ public class Home extends AppCompatActivity {
         float_text = (TextView) findViewById(R.id.floatOutput);
         float_text.setText((CharSequence) "no data");
 
+        //Initialise Firebase
+        hitamFB = new FBControl(this);
+
+        //Set dialog for spending
+        builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        spendingView = inflater.inflate(R.layout.dialog_spend_adjust, null);
+        builder.setView(spendingView)
+                .setPositiveButton(R.string.spend_positive, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        Integer take;
+                        EditText amount = (EditText) spendingView.findViewById(R.id.spendAmount);
+                        CheckBox takeCheck = (CheckBox) spendingView.findViewById(R.id.spendTake);
+
+                        if (takeCheck.isChecked()) {
+                            take = 0;
+                        } else {
+                            take = 1;
+                        }
+
+                        local_db.insertSpend(take, Float.parseFloat(String.valueOf(amount.getText())));
+                        getBalance();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.spend_negative, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });;
+        spending = builder.create();
+
+        //Finally
         getBalance();
     }
 
+    /**
+     * Extends the AsyncTask for calculating the balance and setting the result in the EditText
+     * No parameters, uses DB and globals
+     */
     private class CalculateBalance extends AsyncTask<Void, Void, Float> {
 
         @Override
@@ -59,11 +109,15 @@ public class Home extends AppCompatActivity {
             Integer frequencyPosition = incomeBundle.getInt("frequency");
 
             Float itemSum = local_db.getAllItemSum();
+
+            Float spendAdd = local_db.getSpendAddTotal();
+            Float spendTake = local_db.getSpendTakeTotal();
+
             commitments = itemSum * frequencyPosition;
 
             incomeAfter = (income - tax) - deductions;
 
-            balance = incomeAfter - commitments;
+            balance = incomeAfter - commitments - spendTake + spendAdd;
 
             return balance;
         }
@@ -80,6 +134,10 @@ public class Home extends AppCompatActivity {
         }
     }
 
+    /**
+     * Extends the AsyncTask to handle calculating and pushing balance up to Firebase
+     * No parameters, uses DB, Globals and FB
+     */
     private class WriteBalance extends AsyncTask<Void, Void, Double> {
 
         @Override
@@ -95,34 +153,61 @@ public class Home extends AppCompatActivity {
             Integer frequencyPosition = incomeBundle.getInt("frequency");
 
             Float itemSum = local_db.getAllItemSum();
+
+            Float spendAdd = local_db.getSpendAddTotal();
+            Float spendTake = local_db.getSpendTakeTotal();
+
             commitments = itemSum * frequencyPosition;
 
             incomeAfter = (income - tax) - deductions;
 
-            calcBalance = incomeAfter - commitments;
+            calcBalance = incomeAfter - commitments - spendTake + spendAdd;
 
-            Double balance = Double.parseDouble(String.valueOf(calcBalance));
-
-
-            return balance;
+            return Double.parseDouble(String.valueOf(calcBalance));
         }
 
         @Override
         protected void onPostExecute(Double result) {
+            //To delete timestamp from long
             Date today  = new Date();
-            Long date = today.getTime();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(today.getTime());
+            calendar.set(Calendar.HOUR, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
 
-            Preferences.hitamFB.writeNewEntry(result, date);
+            Long date = calendar.getTimeInMillis();
+
+            hitamFB.writeNewEntry(result, date);
         }
     }
 
+    /**
+     * Handles CalculateBalance instance creation and execution
+     */
     public void getBalance() {
         CalculateBalance task = new CalculateBalance();
         task.execute();
     }
 
     /**
-     * Navigates to the commitment listView activity
+     * Displays the spending dialog, refreshes the EditText
+     * @param view
+     */
+    public void onSpend(View view) {
+        spending.setOnShowListener(new DialogInterface.OnShowListener() {
+               @Override
+               public void onShow(DialogInterface dialogInterface) {
+                   EditText spendAmount = (EditText) spendingView.findViewById(R.id.spendAmount);
+                   spendAmount.setText((CharSequence) "");
+               }
+           });
+        spending.show();
+    }
+
+    /**
+     * Navigates to the Commitments activity
      * @param view
      */
     public void navigateToCommitments(View view) {
@@ -131,7 +216,7 @@ public class Home extends AppCompatActivity {
     }
 
     /**
-     * Navigates to the income form
+     * Navigates to the Income activity
      * @param view
      */
     public void navigateToIncome(View view) {
@@ -139,15 +224,51 @@ public class Home extends AppCompatActivity {
         startActivityForResult(intentCommit, INCOME_NAV);
     }
 
+    /**
+     * Checks conditions based on income start date and frequency interval, Firebase account sign in
+     * before handling creation and execution of WriteBalance instance.
+     * @param view
+     */
     public void writeToFirebase(View view) {
-        if(Preferences.hitamFB.authenticUserSet()) {
-            WriteBalance task = new WriteBalance();
-            task.execute();
+        Date today = new Date();
+        Calendar todayDate = Calendar.getInstance();
+        todayDate.setTimeInMillis(today.getTime());
+        if (compareDate(todayDate)) {
+            if(hitamFB.authenticUserSet()) {
+                WriteBalance task = new WriteBalance();
+                task.execute();
+            } else {
+                Toast.makeText(this, R.string.firebase_no_user,
+                        Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(this, R.string.firebase_no_user,
+            Toast.makeText(this, R.string.firebase_too_early,
                     Toast.LENGTH_SHORT).show();
         }
+    }
 
+    /**
+     * Compares the income date + frequency, to today's date. Returns true if current date is outside
+     * of the interval. Used by writeToFirebase method.
+     * @param currentDate
+     * @return boolean
+     */
+    public boolean compareDate(Calendar currentDate) {
+        Bundle incomeBundle = local_db.getIncomeData();
+        Integer frequency = incomeBundle.getInt("frequency");
+        Long startDateLong = incomeBundle.getLong("startDate");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(startDateLong);
+
+        if(calendar.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) &&
+        calendar.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH) &&
+                (calendar.get(Calendar.DAY_OF_MONTH) + frequency) <= currentDate.get(Calendar.DAY_OF_MONTH))
+        {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override

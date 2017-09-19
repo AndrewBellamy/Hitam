@@ -49,11 +49,13 @@ public class DBControl extends SQLiteOpenHelper {
     public static final String SPEND_TAKE = "subtract";
     public static final String SPEND_AMOUNT = "amount";
 
+    /**
+     * Initialise the DB interface
+     * @param context
+     */
     public DBControl(Context context) {
         super(context, DATABASE_NAME , null, 1);
     }
-
-    //Firebase Instance
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -75,6 +77,7 @@ public class DBControl extends SQLiteOpenHelper {
                 "CREATE TABLE "+SPEND_TABLE+" (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "+SPEND_TAKE+" INTEGER, "+SPEND_AMOUNT+" FLOAT)"
         );
 
+        //Set initial values - this will not persist after first use
         ContentValues sectionValues = new ContentValues();
         sectionValues.put(SECTION_NAME, "Unsorted");
         sectionValues.put(SECTION_PRIORITY, 3);
@@ -102,6 +105,11 @@ public class DBControl extends SQLiteOpenHelper {
 
     //CUD methods
 
+    /**
+     * Updates the income table. Only one row is ever stored and updated.
+     * @param updateBundle
+     * @return
+     */
     public boolean updateIncome(Bundle updateBundle) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -114,6 +122,11 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Inserts a new commitment into the section table.
+     * @param sectionName
+     * @return
+     */
     public boolean insertSection(Editable sectionName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues sectionValues = new ContentValues();
@@ -124,6 +137,12 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Updates commitment using id, replacing the section name.
+     * @param id
+     * @param sectionName
+     * @return
+     */
     public boolean updateSection(Integer id, Editable sectionName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -132,6 +151,13 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Used to update commitment total and priority after retrieving aggregations from DB.
+     * @param section
+     * @param priority
+     * @param total
+     * @return
+     */
     public boolean setSectionByItems(String section, Integer priority, Float total) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -141,12 +167,26 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Deletes a commitment using the id.
+     * @param id
+     * @return
+     */
     public boolean deleteSection(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(SECTION_TABLE, "id = ? ", new String[] {Integer.toString(id)});
         return true;
     }
 
+    /**
+     * Inserts an expense into the item table.
+     * @param itemName
+     * @param amount
+     * @param frequency
+     * @param priority
+     * @param section
+     * @return
+     */
     public boolean insertItem(Editable itemName, Float amount, Integer frequency, Integer priority, String section) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues itemValues = new ContentValues();
@@ -159,6 +199,11 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Updates an expense in the item table, using the ID.
+     * @param updateBundle
+     * @return
+     */
     public boolean updateItem(Bundle updateBundle) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues itemValues = new ContentValues();
@@ -170,6 +215,11 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Defaults expenses into the unsorted, commitments group, when their commitment has been deleted.
+     * @param section
+     * @return
+     */
     public boolean unsortItems(String section) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues itemValues = new ContentValues();
@@ -178,6 +228,12 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Updates the expenses section, when the commitment name has changed.
+     * @param currentSection
+     * @param newSection
+     * @return
+     */
     public boolean updateItemSection(String currentSection, Editable newSection) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues itemValues = new ContentValues();
@@ -186,12 +242,23 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Deletes an expense from the items table.
+     * @param id
+     * @return
+     */
     public boolean deleteItem(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(ITEM_TABLE, "id = ? ", new String[] {Integer.toString(id)});
         return true;
     }
 
+    /**
+     * Inserts spending adjustment, either gain or loss. Spending is never updated.
+     * @param take
+     * @param amount
+     * @return
+     */
     public boolean insertSpend(Integer take, Float amount) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues spendValues = new ContentValues();
@@ -201,13 +268,22 @@ public class DBControl extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Clears all spending rows. Used when Income has been saved.
+     * @return
+     */
     public boolean deleteSpend() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(SPEND_TABLE, "", new String[] {});
+        db.execSQL("DELETE FROM " + SPEND_TABLE);
         return true;
     }
 
     //Predicate methods
+
+    /**
+     * Retrieves income data in a single Bundle.
+     * @return
+     */
     public Bundle getIncomeData() {
         Bundle responseBundle = new Bundle();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -243,6 +319,10 @@ public class DBControl extends SQLiteOpenHelper {
         return responseBundle;
     }
 
+    /**
+     * Retrieves all commitments in a single Bundle.
+     * @return
+     */
     public Bundle getSectionData() {
         ArrayList<String> array_sections = new ArrayList<String> ();
         ArrayList<String> array_ids = new ArrayList<String> ();
@@ -261,6 +341,11 @@ public class DBControl extends SQLiteOpenHelper {
         return responseBundle;
     }
 
+    /**
+     * Retrieves expenses, based on commitment, as a single Bundle.
+     * @param section
+     * @return
+     */
     public Bundle getItemData(String section) {
         ArrayList<String> array_items = new ArrayList<String> ();
         ArrayList<String> array_ids = new ArrayList<String> ();
@@ -279,12 +364,22 @@ public class DBControl extends SQLiteOpenHelper {
         return responseBundle;
     }
 
+    /**
+     * Retrieves one expense, based on ID, as a Cursor.
+     * @param identifier
+     * @return
+     */
     public Cursor getItemDataByIdentifier(Integer identifier) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor response = db.rawQuery("SELECT * FROM "+ITEM_TABLE+" WHERE id='"+identifier+"'", null);
         return response;
     }
 
+    /**
+     * Returns aggregate TOTAL for expenses, based on commitment.
+     * @param section
+     * @return
+     */
     public Float getItemTotal(String section) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor response = db.rawQuery("SELECT TOTAL("+ITEM_AMOUNT+") FROM "+ITEM_TABLE+" WHERE "+ITEM_SECTION+"='"+section+"'", null);
@@ -293,6 +388,10 @@ public class DBControl extends SQLiteOpenHelper {
         return response.getFloat(0);
     }
 
+    /**
+     * Returns aggrgate TOTAL of ALL expenses in DB;
+     * @return
+     */
     public Float getAllItemSum() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor response = db.rawQuery("SELECT TOTAL("+ITEM_AMOUNT+") FROM "+ITEM_TABLE+"", null);
@@ -301,12 +400,41 @@ public class DBControl extends SQLiteOpenHelper {
         return response.getFloat(0);
     }
 
+    /**
+     * Returns the aggregate AVG of priority, based on commitment.
+     * @param section
+     * @return
+     */
     public Integer getItemPriority(String section) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor response = db.rawQuery("SELECT AVG("+ITEM_PRIORITY+") FROM "+ITEM_TABLE+" WHERE "+ITEM_SECTION+"='"+section+"'", null);
         response.moveToFirst();
 
         return response.getInt(0);
+    }
+
+    /**
+     * Returns the aggregate TOTAL of spending, as gained.
+     * @return
+     */
+    public Float getSpendAddTotal() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor response = db.rawQuery("SELECT TOTAL("+SPEND_AMOUNT+") FROM "+SPEND_TABLE+" WHERE "+SPEND_TAKE+"='"+0+"'", null);
+        response.moveToFirst();
+
+        return response.getFloat(0);
+    }
+
+    /**
+     * Returns the aggregate TOTAL of spending, as lost.
+     * @return
+     */
+    public Float getSpendTakeTotal() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor response = db.rawQuery("SELECT TOTAL("+SPEND_AMOUNT+") FROM "+SPEND_TABLE+" WHERE "+SPEND_TAKE+"='"+1+"'", null);
+        response.moveToFirst();
+
+        return response.getFloat(0);
     }
 
 }

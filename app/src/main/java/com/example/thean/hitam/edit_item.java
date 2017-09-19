@@ -15,28 +15,35 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class edit_item extends AppCompatActivity {
+/**
+ * Created by Andrew Bellamy.
+ * For Hitam | Assignment 2 SIT207
+ * Student ID: 215240036
+ */
 
+public class edit_item extends AppCompatActivity {
+    //Controls
     EditText editItemName, editItemAmount, editItemFreq, editItemPriority;
     String section;
-
-    Integer freqValue = 0;
-    Integer prioValue = 0;
-
-    AlertDialog.Builder builder;
-    AlertDialog frequency;
-    AlertDialog priority;
-
     View frequencyView;
     View priorityView;
 
     ListView dialogList;
 
     ArrayAdapter<String> adapter;
-
-    private DBControl local_db;
-    utility hitamUtility;
+    //Variables
+    Integer freqValue = 0;
+    Integer prioValue = 0;
     Bundle extras;
+    //Dialog
+    AlertDialog.Builder builder;
+    AlertDialog frequency;
+    AlertDialog priority;
+    //DB
+    private DBControl local_db;
+    //Utilities
+    utility hitamUtility;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +51,17 @@ public class edit_item extends AppCompatActivity {
         setContentView(R.layout.activity_edit_item);
 
         extras = getIntent().getExtras();
+        //Initialise DB and Utility
         local_db = new DBControl(this);
         hitamUtility = new utility(this);
 
+        //Set Controls
         editItemAmount = (EditText) findViewById(R.id.editItemAmount);
         editItemName = (EditText) findViewById(R.id.editItemName);
         editItemFreq = (EditText) findViewById(R.id.editItemFreq);
         editItemPriority = (EditText) findViewById(R.id.editItemPriority);
 
+        //Throw the user out of the Activity, if no extra
         if (extras != null) {
             setEditableItem();
         } else {
@@ -82,6 +92,10 @@ public class edit_item extends AppCompatActivity {
         priority = builder.create();
     }
 
+    /**
+     * Handles DB retrieval of Item data, and populates appropriate controls. Also calculates the amount,
+     * based on DB amount, multiplied by the frequency integer. Refers to utility lists for key:value pairs.
+     */
     public void setEditableItem() {
         Cursor response = local_db.getItemDataByIdentifier(extras.getInt("selectedItem"));
         response.moveToFirst();
@@ -115,7 +129,11 @@ public class edit_item extends AppCompatActivity {
         }
     }
 
-    //Generate the frequency dialog list
+    /**
+     * Uses utility to set the ArrayList, and adapt to the ListView in the selection dialog. Uses the
+     * dialog's onShowListener to adjust the dialog before display
+     * @param view
+     */
     public void selectEditItemFrequency(View view) {
         //populate frequencies
         hitamUtility.setFrequencyList();
@@ -143,7 +161,11 @@ public class edit_item extends AppCompatActivity {
         frequency.show();
     }
 
-
+    /**
+     * Uses utility to set the ArrayList, and adapt to the ListView in the selection dialog. Uses the
+     * dialog's onShowListener to adjust the dialog before display
+     * @param view
+     */
     public void selectEditItemPriority(View view) {
         //populate priorities
         hitamUtility.setPriorityList();
@@ -171,6 +193,10 @@ public class edit_item extends AppCompatActivity {
         priority.show();
     }
 
+    /**
+     * Handles control data collection and Bundling, before calling the required DB method for update.
+     * @return
+     */
     public boolean updateItem() {
         Float amountEntered = Float.parseFloat(String.valueOf(editItemAmount.getText()));
         Float amountSingular = amountEntered / freqValue;
@@ -183,6 +209,10 @@ public class edit_item extends AppCompatActivity {
         return local_db.updateItem(itemBundle);
     }
 
+    /**
+     * Calls the delete DB method, passing in the ID.
+     * @return
+     */
     public boolean deleteItem() {
         return local_db.deleteItem(extras.getInt("selectedItem"));
     }

@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by thean on 12/08/2017.
+ * Created by Andrew Bellamy on 12/08/2017.
+ * For Hitam | Assignment 2 SIT207
+ * Student ID: 215240036
+ *
+ * This class manages the initial startup splash with the app logo.
  */
 
 public class SplashActivity extends AppCompatActivity {

@@ -15,16 +15,24 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+/**
+ * Created by Andrew Bellamy.
+ * For Hitam | Assignment 2 SIT207
+ * Student ID: 215240036
+ */
+
 public class Item extends AppCompatActivity {
 
     //Constants
     private static final int EDIT_ITEM = 1;
     private static final int ADD_ITEM = 2;
-
+    //DB
     private DBControl local_db;
+    //Utilities
     utility hitamUtility;
-
+    //Variables
     String section;
+    //Controls
     ArrayList<String> items;
     ArrayList<String> identifiers;
     ArrayAdapter<String> arrayAdapter;
@@ -36,19 +44,26 @@ public class Item extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items);
 
+        //Set commitment name
         section = getIntent().getStringExtra("selectedSection");
 
         sectionName = (TextView) findViewById(R.id.sectionName);
         sectionName.setText(section);
 
-
+        //Initialise DB and Utility
         local_db = new DBControl(this);
         hitamUtility = new utility(this);
+
+        //Set controls
         itemList = (ListView) findViewById(R.id.itemList);
 
+        //finally
         retrieveItems();
     }
 
+    /**
+     * Handles call to DB for expense data, passing in the commitment name.
+     */
     public void retrieveItems() {
         Bundle dataBundle = local_db.getItemData(section);
         items = dataBundle.getStringArrayList("items");
@@ -96,19 +111,19 @@ public class Item extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == ADD_ITEM) {
             if(resultCode == RESULT_OK) {
-                //Toast.makeText(this, R.string.add_item_success_message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.add_item_success_message, Toast.LENGTH_SHORT).show();
                 hitamUtility.calculateSection(section);
                 retrieveItems();
             }
         }
         if(requestCode == EDIT_ITEM) {
             if(resultCode == RESULT_OK) {
-                //Toast.makeText(this, R.string.edit_item_success_message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.edit_item_success_message, Toast.LENGTH_SHORT).show();
                 hitamUtility.calculateSection(section);
                 retrieveItems();
             }
             if(resultCode == RESULT_FIRST_USER) {
-                //Toast.makeText(this, R.string.edit_item_delete_message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.edit_item_delete_message, Toast.LENGTH_SHORT).show();
                 hitamUtility.calculateSection(section);
                 retrieveItems();
             }

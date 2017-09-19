@@ -1,10 +1,9 @@
 package com.example.thean.hitam;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.DialogPreference;
 import android.text.TextUtils;
@@ -15,19 +14,32 @@ import android.widget.Button;
 import android.widget.EditText;
 
 /**
- * Created by thean on 17/09/2017.
+ * Created by Andrew Bellamy on 17/09/2017.
+ * For Hitam | Assignment 2 SIT207
+ * Student ID: 215240036
  */
 
 public class signinAccountDialog extends DialogPreference implements DialogInterface.OnClickListener {
 
+    //Controls
     EditText email, password;
     AlertDialog alertDialog;
+    static ProgressDialog progress;
 
+    /**
+     * Initialises the dialog preference and the progress dialog
+     * @param context
+     * @param attrs
+     */
     public signinAccountDialog(Context context, AttributeSet attrs) {
         super(context, attrs);
         setPersistent(false);
         setDialogLayoutResource(R.layout.activity_login);
         setPositiveButtonText("login");
+
+        progress = new ProgressDialog(context);
+        progress.setTitle("Signing in...");
+        progress.setCancelable(false);
     }
 
     @Override
@@ -53,14 +65,22 @@ public class signinAccountDialog extends DialogPreference implements DialogInter
                 String emailText = String.valueOf(email.getText());
 
                 if(isValid(emailText, passText)) {
-                    authParameters parameters = new authParameters(emailText, passText);
-                    authenticTasks signInTime = new authenticTasks();
-                    signInTime.execute(parameters);
+                    alertDialog.dismiss();
+                    progress.show();
+                    //Call Firebase interface to sign in
+                    Home.hitamFB.authenticSignIn(emailText, passText);
                 }
             }
         });
     }
 
+    /**
+     * Handles validation for email and password, setting error UI value states when conditions are
+     * not met.
+     * @param emailText
+     * @param passText
+     * @return
+     */
     public boolean isValid(String emailText, String passText) {
         boolean valid = true;
 
@@ -78,28 +98,5 @@ public class signinAccountDialog extends DialogPreference implements DialogInter
         return valid;
     }
 
-    private static class authParameters {
-        String email;
-        String password;
-
-        authParameters(String email, String password) {
-            this.email = email;
-            this.password = password;
-        }
-    }
-
-    private class authenticTasks extends AsyncTask<authParameters, Void, String> {
-
-        @Override
-        protected String doInBackground(authParameters... params) {
-            Preferences.hitamFB.authenticSignIn(params[0].email, params[0].password);
-            return "finsihed";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            alertDialog.dismiss();
-        }
-    }
 }
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,24 +16,29 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class Section extends AppCompatActivity {
+/**
+ * Created by Andrew Bellamy.
+ * For Hitam | Assignment 2 SIT207
+ * Student ID: 215240036
+ */
 
+public class Section extends AppCompatActivity {
+    //DB
     private DBControl local_db;
+    //Controls
     ArrayList<String> sections;
     ArrayList<String> identifiers;
     ArrayAdapter<String> arrayAdapter;
     ListView sectionList;
+    EditText sectionName;
+    //Variables
     Integer editPosition;
     String selectedSection;
-
-    //Dialog views
+    //Dialog
     View addView;
     View editView;
-    EditText sectionName;
-
     AlertDialog.Builder builder;
     AlertDialog dialog;
-
     AlertDialog.Builder builder_edit;
     AlertDialog dialog_edit;
 
@@ -43,6 +47,7 @@ public class Section extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_section);
 
+        //Initialise DB
         local_db = new DBControl(this);
 
         //Add dialog
@@ -95,11 +100,17 @@ public class Section extends AppCompatActivity {
 
         dialog_edit = builder_edit.create();
 
+        //Set Controls
         sectionList = (ListView) findViewById(R.id.sectionList);
 
+        //finally
         retrieveSections();
     }
 
+    /**
+     * Handles commitment data retrieval from DB, adapts data to ListView. Sets on LONG press listener
+     * for managing update and delete requests.
+     */
     public void retrieveSections() {
         Bundle dataBundle = local_db.getSectionData();
         sections = dataBundle.getStringArrayList("sections");
@@ -132,6 +143,9 @@ public class Section extends AppCompatActivity {
         }
     }
 
+    /**
+     * Displays the dialog for adding a Commitment. Refreshes EditText before show.
+     */
     public void addSection() {
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -143,6 +157,10 @@ public class Section extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * Displays the dialog for editing a Commitment. Sets EditText to current name.
+     * @param section
+     */
     public void editSection(final String section) {
         selectedSection = section;
         dialog_edit.setOnShowListener(new DialogInterface.OnShowListener() {

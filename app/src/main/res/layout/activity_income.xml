@@ -11,15 +11,14 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:text="@string/label_income_amount"
         android:textAlignment="center"
         android:textSize="18sp"
+        android:labelFor="@+id/amountNumber"
         app:layout_constraintBaseline_toBaselineOf="@+id/amountNumber"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/amountNumber"
-        android:layout_marginRight="8dp"
         app:layout_constraintHorizontal_bias="0.5" />
 
     <EditText
@@ -31,7 +30,6 @@
         android:ems="10"
         android:inputType="numberDecimal"
         app:layout_constraintTop_toBottomOf="@+id/startDate"
-        android:layout_marginRight="16dp"
         app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
@@ -39,14 +37,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:text="@string/label_income_tax"
         android:textSize="18sp"
+        android:labelFor="@+id/taxNumber"
         app:layout_constraintBaseline_toBaselineOf="@+id/taxNumber"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/taxNumber"
-        android:layout_marginRight="8dp"
         app:layout_constraintHorizontal_bias="0.5" />
 
     <EditText
@@ -58,7 +55,6 @@
         android:ems="10"
         android:inputType="numberDecimal"
         app:layout_constraintTop_toBottomOf="@+id/amountNumber"
-        android:layout_marginRight="16dp"
         app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
@@ -66,15 +62,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:text="@string/label_income_deductions"
         android:textAlignment="center"
         android:textSize="18sp"
+        android:labelFor="@+id/deductionNumber"
         app:layout_constraintBaseline_toBaselineOf="@+id/deductionNumber"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/deductionNumber"
-        android:layout_marginRight="8dp"
         app:layout_constraintHorizontal_bias="0.5" />
 
     <EditText
@@ -86,21 +81,19 @@
         android:ems="10"
         android:inputType="numberDecimal"
         app:layout_constraintTop_toBottomOf="@+id/taxNumber"
-        android:layout_marginRight="16dp"
         app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/label_income_freq"
         android:textAlignment="center"
         android:textSize="18sp"
+        android:labelFor="@+id/incomeFrequency"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/incomeFrequency"
-        android:layout_marginRight="8dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/incomeFrequency"
         app:layout_constraintHorizontal_bias="0.54" />
 
@@ -111,11 +104,12 @@
         android:text="@string/label_income_date"
         android:textAlignment="center"
         android:textSize="18sp"
+        android:labelFor="@+id/startDate"
         app:layout_constraintBaseline_toBaselineOf="@+id/startDate"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/startDate"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintHorizontal_bias="0.503" />
 
     <EditText
@@ -130,7 +124,6 @@
         android:inputType="date"
         android:onClick="selectStartDate"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="16dp"
         app:layout_constraintRight_toRightOf="parent" />
 
     <EditText
@@ -145,7 +138,6 @@
         android:inputType="textPersonName"
         android:onClick="selectFrequency"
         app:layout_constraintTop_toBottomOf="@+id/deductionNumber"
-        android:layout_marginRight="16dp"
         app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

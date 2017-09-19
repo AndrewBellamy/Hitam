@@ -10,7 +10,7 @@
     <string name="button_home_subtract">Take</string>
     <string name="button_home_section">Commitments</string>
     <string name="button_home_income">Income</string>
-    <string name="button_home_end">End</string>
+    <string name="button_home_end">Save</string>
     <string name="no_data_result">No Data</string>
     <string name="label_income_amount">Amount</string>
     <string name="label_income_tax">Tax</string>
@@ -27,6 +27,11 @@
     <string name="edit_section_dialog_input">Name..</string>
     <string name="edit_section_dialog_affirm">Save</string>
     <string name="edit_section_dialog_negate">Delete</string>
+    <string name="spend_dialog_title">Adjust Spending</string>
+    <string name="spend_amount_hint">0.00</string>
+    <string name="spend_adding_amount">Add Amount?</string>
+    <string name="spend_positive">Adjust</string>
+    <string name="spend_negative">Cancel</string>
     <string name="add_item_name">Name</string>
     <string name="add_item_amount">Amount</string>
     <string name="add_item_frequency">Frequency</string>
@@ -70,8 +75,9 @@
     <string name="auth_password">Password</string>
     <string name="auth_login_success">Signed In</string>
     <string name="auth_logout_success">Signed out</string>
-    <string name="auth_create_success">Verify Account by Email</string>
+    <string name="auth_create_success">Account created, please sign in</string>
     <string name="auth_error">Error, check network connection</string>
     <string name="firebase_write_success">Saved balance for today</string>
     <string name="firebase_no_user">Save requires login</string>
+    <string name="firebase_too_early">Frequency from start date, not passed</string>
 </resources>

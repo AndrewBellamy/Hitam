@@ -1,39 +1,44 @@
 package com.example.thean.hitam;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 /**
- * Created by thean on 11/09/2017.
+ * Created by Andrew Bellamy on 11/09/2017.
+ * For Hitam | Assignment 2 SIT207
+ * Student ID: 215240036
  */
-
 public class utility {
 
-    //Variables
+    //Controls
     ArrayList<Integer> keys = new ArrayList<Integer>();
     ArrayList<String> values = new ArrayList<String>();
-
+    //Context
     Context utilityContext;
-
+    //DB
     private DBControl local_db;
 
-
+    /**
+     * Initialises the class, setting the context and DB interface.
+     * @param context
+     */
     public utility(Context context) {
         utilityContext = context;
         local_db = new DBControl(context);
     }
 
+    /**
+     * Clears the ArrayLists. Used prior to setting the Array Lists.
+     */
     public void clearAddItemArrays() {
         values.clear();
         keys.clear();
     }
 
+    /**
+     * Gathers array data and pushes into the frequency ArrayList.
+     */
     public void setFrequencyList() {
         clearAddItemArrays();
         String[] frequencyArray = utilityContext.getResources().getStringArray(R.array.frequency_array);
@@ -44,6 +49,9 @@ public class utility {
         }
     }
 
+    /**
+     * Gathers array data and pushes into the priority ArrayList.
+     */
     public void setPriorityList() {
         clearAddItemArrays();
         String[] priorityArray = utilityContext.getResources().getStringArray(R.array.priority_array);
@@ -54,11 +62,11 @@ public class utility {
         }
     }
 
-    public Float calculateBalance() {
-
-        return 0.00F;
-    }
-
+    /**
+     * Task pushed to background thread, for returning and setting Commitment priority and total in
+     * the DB.
+     * @param section
+     */
     public void calculateSection(final String section) {
         if(section != "Unsorted") {
             Runnable calculate = new Runnable() {
@@ -66,11 +74,7 @@ public class utility {
                 public void run() {
                     Float total = local_db.getItemTotal(section);
 
-                    Log.i("total", String.valueOf(total));
-
                     Integer avgPriority = local_db.getItemPriority(section);
-
-                    Log.i("average priority", String.valueOf(avgPriority));
 
                     local_db.setSectionByItems(section, avgPriority, total);
                 }

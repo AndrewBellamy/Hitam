@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,28 +15,33 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+/**
+ * Created by Andrew Bellamy.
+ * For Hitam | Assignment 2 SIT207
+ * Student ID: 215240036
+ */
 
 public class add_item extends AppCompatActivity {
 
+    //DB
     private DBControl local_db;
-
+    //Controls
     EditText addItemName, addItemAmount, addItemFreq, addItemPriority;
-    String addItemSection;
-    Integer freqValue = 0;
-    Integer prioValue = 0;
-
-    AlertDialog.Builder builder;
-    AlertDialog frequency;
-    AlertDialog priority;
-
     View frequencyView;
     View priorityView;
 
     ListView dialogList;
 
     ArrayAdapter<String> adapter;
-
+    //Variables
+    String addItemSection;
+    Integer freqValue = 0;
+    Integer prioValue = 0;
+    //Dialog
+    AlertDialog.Builder builder;
+    AlertDialog frequency;
+    AlertDialog priority;
+    //Utilities
     utility hitamUtility;
 
     @Override
@@ -46,10 +50,11 @@ public class add_item extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
 
         Intent intentAdd = getIntent();
-
+        //Initialise DB and Utility
         local_db = new DBControl(this);
         hitamUtility = new utility(this);
 
+        //Set controls
         addItemAmount = (EditText) findViewById(R.id.addItemAmount);
         addItemName = (EditText) findViewById(R.id.addItemName);
         addItemFreq = (EditText) findViewById(R.id.addItemFreq);
@@ -75,7 +80,11 @@ public class add_item extends AppCompatActivity {
         priority = builder.create();
     }
 
-    //Generate the frequency dialog list
+    /**
+     * Uses utility to set the ArrayList, and adapt to the ListView in the selection dialog. Uses the
+     * dialog's onShowListener to adjust the dialog before display
+     * @param view
+     */
     public void selectAddItemFrequency(View view) {
         //populate frequencies
         hitamUtility.setFrequencyList();
@@ -103,7 +112,11 @@ public class add_item extends AppCompatActivity {
         frequency.show();
     }
 
-
+    /**
+     * Uses utility to set the ArrayList, and adapt to the ListView in the selection dialog. Uses the
+     * dialog's onShowListener to adjust the dialog before display
+     * @param view
+     */
     public void selectAddItemPriority(View view) {
         //populate priorities
         hitamUtility.setPriorityList();
@@ -131,6 +144,9 @@ public class add_item extends AppCompatActivity {
         priority.show();
     }
 
+    /**
+     * Handles the validation and DB insert for adding an expense.
+     */
     public void saveAddItem() {
         if(freqValue == 0 && prioValue == 0) {
             Toast.makeText(getApplicationContext(), R.string.add_item_validation, Toast.LENGTH_SHORT).show();

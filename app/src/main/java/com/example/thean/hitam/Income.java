@@ -2,11 +2,9 @@ package com.example.thean.hitam;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,27 +14,32 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
-
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+/**
+ * Created by Andrew Bellamy.
+ * For Hitam | Assignment 2 SIT207
+ * Student ID: 215240036
+ */
 
 public class Income extends AppCompatActivity {
 
     //Variables
-    EditText amountNumber, taxNumber, deductionNumber, startDate, freqSelect;
     Integer freqValue, rowID;
-    ArrayAdapter<String> adapter;
-    DBControl local_db;
     Date dateObject;
+    //Controls
+    EditText amountNumber, taxNumber, deductionNumber, startDate, freqSelect;
+    ArrayAdapter<String> adapter;
     ListView dialogList;
     View frequencyView;
-
+    //Dialog
     AlertDialog.Builder builder;
     AlertDialog frequency;
-
     DatePickerDialog datePickerDialog;
+    //DB
+    DBControl local_db;
+    //Utilities
     utility hitamUtility;
 
     @Override
@@ -70,6 +73,11 @@ public class Income extends AppCompatActivity {
         retrieveIncome();
     }
 
+    /**
+     * Handles call to DB for income data, and populates the appropriate Controls. Refers to utility
+     * class for handling key:value pairs. Also Initialises the datePickerDialog.
+     * @return
+     */
     public boolean retrieveIncome() {
         //Get the income data
         Bundle incomeBundle = local_db.getIncomeData();
@@ -89,14 +97,16 @@ public class Income extends AppCompatActivity {
 
         //Create the date object and dialog
         dateObject = new Date(startDateLong);
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(startDateLong);
-        startDate.setText((CharSequence) String.valueOf(calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.YEAR)));
+        startDate.setText((CharSequence) String.valueOf(calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH)+1) + "/" + calendar.get(Calendar.YEAR)));
 
         datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                startDate.setText((CharSequence) String.valueOf(dayOfMonth) + "/" + String.valueOf(month) + "/" + String.valueOf(year));
+                startDate.setText((CharSequence) String.valueOf(dayOfMonth) + "/" + String.valueOf(month+1) + "/" + String.valueOf(year));
+                calendar.set(year, month, dayOfMonth);
+                dateObject = new Date(calendar.getTimeInMillis());
                 datePickerDialog.dismiss();
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -104,6 +114,10 @@ public class Income extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Handles the call to DB to update the income data set. Also deletes all previous spending.
+     * @return
+     */
     public boolean saveIncome() {
         Bundle incomeBundle = new Bundle();
         incomeBundle.putFloat("amount", Float.parseFloat(String.valueOf(amountNumber.getText())));
@@ -112,14 +126,23 @@ public class Income extends AppCompatActivity {
         incomeBundle.putInt("frequency", freqValue);
         incomeBundle.putLong("startDate", dateObject.getTime());
         incomeBundle.putInt("identifier", rowID);
+        local_db.deleteSpend();
         return local_db.updateIncome(incomeBundle);
     }
 
-    //Dialog Methods
+    /**
+     * Calls the datePickerDialog show method.
+     * @param view
+     */
     public void selectStartDate(View view) {
         datePickerDialog.show();
     }
 
+    /**
+     * Uses utility to set the ArrayList, and adapt to the ListView in the selection dialog. Uses the
+     * dialog's onShowListener to adjust the dialog before display
+     * @param view
+     */
     public void selectFrequency(View view) {
         frequency.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override

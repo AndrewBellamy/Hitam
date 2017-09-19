@@ -13,14 +13,22 @@ import android.widget.Button;
 import android.widget.EditText;
 
 /**
- * Created by thean on 16/09/2017.
+ * Created by Andrew Bellamy on 16/09/2017.
+ * For Hitam | Assignment 2 SIT207
+ * Student ID: 215240036
  */
 
 public class createAccountDialog extends DialogPreference implements DialogInterface.OnClickListener {
 
+    //Controls
     EditText email, password;
     AlertDialog alertDialog;
 
+    /**
+     * Initialises the dialog preference
+     * @param context
+     * @param attrs
+     */
     public createAccountDialog(Context context, AttributeSet attrs) {
         super(context, attrs);
         setPersistent(false);
@@ -49,13 +57,21 @@ public class createAccountDialog extends DialogPreference implements DialogInter
                 String emailText = String.valueOf(email.getText());
 
                 if(isValid(emailText, passText)) {
-                    Preferences.hitamFB.authenticCreateUser(emailText, passText);
+                    //Call Firebase interface to create account
+                    Home.hitamFB.authenticCreateUser(emailText, passText);
                     alertDialog.dismiss();
                 }
             }
         });
     }
 
+    /**
+     * Handles validation for email and password, setting error UI value states when conditions are
+     * not met.
+     * @param emailText
+     * @param passText
+     * @return
+     */
     public boolean isValid(String emailText, String passText) {
         boolean valid = true;
 
